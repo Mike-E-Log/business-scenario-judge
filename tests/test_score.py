@@ -118,3 +118,61 @@ def test_unknown_item_id_raises():
     preds.append({"item_id": "ghost-item", "judge": "baseline", "label": 0})
     with pytest.raises(ValueError, match="unknown item_id.*ghost-item"):
         compute_metrics(gold, preds)
+
+
+def _paired_gold(n_held=10, n_cal=4):
+    return ([{"item_id": f"h{k}", "question": "q", "answer_a": "a", "answer_b": "b",
+              "label": 0, "split": "heldout", "tags": ["wrong-slot-value"]} for k in range(n_held)]
+            + [{"item_id": f"c{k}", "question": "q", "answer_a": "a", "answer_b": "b",
+                "label": 1, "split": "calibration", "tags": ["unhelpful-hedging"]} for k in range(n_cal)])
+
+
+def test_paired_delta_ci_is_zero_when_judges_identical_but_half_right():
+    # Both judges correct on the SAME 5 of 10 held-out items -> every resample's
+    # delta is exactly 0. Differencing two per-judge CIs (the wrong implementation)
+    # yields a wide interval here — this fixture discriminates.
+    gold = _paired_gold()
+    preds = []
+    for i, g in enumerate([g for g in gold if g["split"] == "heldout"]):
+        lab = g["label"] if i < 5 else (g["label"] + 1) % 3
+        preds.append({"item_id": g["item_id"], "judge": "baseline", "label": lab})
+        preds.append({"item_id": g["item_id"], "judge": "calibrated", "label": lab})
+    m = compute_metrics(gold, preds)
+    assert m["heldout"]["delta"]["delta_ci95"] == [0.0, 0.0]
+    assert m["heldout"]["delta"]["straddles_zero"] is True
+
+
+def test_paired_delta_ci_known_answer_all_right_vs_all_wrong():
+    # Calibrated right on all 10, baseline wrong on all 10 -> delta 1.0 in every
+    # resample -> CI exactly [1.0, 1.0]; McNemar b=0, c=10 -> p = 2 * 0.5**10.
+    gold = _paired_gold()
+    preds = []
+    for g in [g for g in gold if g["split"] == "heldout"]:
+        preds.append({"item_id": g["item_id"], "judge": "baseline", "label": (g["label"] + 1) % 3})
+        preds.append({"item_id": g["item_id"], "judge": "calibrated", "label": g["label"]})
+    m = compute_metrics(gold, preds)
+    d = m["heldout"]["delta"]
+    assert d["delta_ci95"] == [1.0, 1.0]
+    assert d["straddles_zero"] is False
+    assert d["discordant_baseline_only_correct"] == 0
+    assert d["discordant_calibrated_only_correct"] == 10
+    assert abs(d["mcnemar_exact_p"] - 2 * 0.5**10) < 1e-12
+
+
+def test_mcnemar_p_is_one_with_no_discordant_pairs():
+    gold = _gold()
+    m = compute_metrics(gold, _preds(gold, flip_for_baseline=0))
+    d = m["heldout"]["delta"]
+    assert d["discordant_baseline_only_correct"] == 0
+    assert d["discordant_calibrated_only_correct"] == 0
+    assert d["mcnemar_exact_p"] == 1.0
+
+
+def test_majority_label_baseline_reported():
+    gold = _paired_gold()          # calibration labels all 1 -> majority label 1
+    preds = [{"item_id": g["item_id"], "judge": j, "label": g["label"]}
+             for g in gold if g["split"] == "heldout" for j in ("baseline", "calibrated")]
+    m = compute_metrics(gold, preds)
+    mlb = m["heldout"]["majority_label_baseline"]
+    assert mlb["label"] == 1
+    assert mlb["accuracy"] == 0.0  # heldout labels are all 0

@@ -6,6 +6,7 @@ import random
 from collections import Counter
 from pathlib import Path
 
+from scipy.stats import binomtest
 from sklearn.metrics import cohen_kappa_score
 
 N_BOOT, SEED = 10_000, 20260723
@@ -26,6 +27,28 @@ def _ci95(y_true, y_pred):
         accs.append(sum(y_true[i] == y_pred[i] for i in idx) / n)
     accs.sort()
     return [accs[int(0.025 * N_BOOT)], accs[int(0.975 * N_BOOT)]]
+
+
+def _paired_delta_ci95(yt, yp_base, yp_cal):
+    """Shared resample indices per iteration — never differencing per-judge CIs."""
+    rng = random.Random(SEED); n = len(yt); deltas = []
+    for _ in range(N_BOOT):
+        idx = [rng.randrange(n) for _ in range(n)]
+        acc_b = sum(yt[i] == yp_base[i] for i in idx) / n
+        acc_c = sum(yt[i] == yp_cal[i] for i in idx) / n
+        deltas.append(acc_c - acc_b)
+    deltas.sort()
+    return [deltas[int(0.025 * N_BOOT)], deltas[int(0.975 * N_BOOT)]]
+
+
+def _mcnemar_exact(yt, yp_base, yp_cal):
+    """Exact McNemar via the two-sided binomial on discordant pairs. Deterministic, seedless."""
+    b = sum(t == pb and t != pc for t, pb, pc in zip(yt, yp_base, yp_cal))
+    c = sum(t != pb and t == pc for t, pb, pc in zip(yt, yp_base, yp_cal))
+    p = 1.0 if b + c == 0 else float(binomtest(min(b, c), b + c, 0.5).pvalue)
+    return {"discordant_baseline_only_correct": b,
+            "discordant_calibrated_only_correct": c,
+            "mcnemar_exact_p": p}
 
 
 def compute_metrics(gold, preds):
@@ -59,12 +82,28 @@ def compute_metrics(gold, preds):
                          "cohen_kappa": _kappa(yt, yp)}
         out["heldout"][judge] = scores[judge]
     b, c = scores["baseline"], scores["calibrated"]
+    yt = [g["label"] for g in held]
+    yp_b = [by_judge["baseline"][g["item_id"]] for g in held]
+    yp_c = [by_judge["calibrated"][g["item_id"]] for g in held]
+    delta_ci = _paired_delta_ci95(yt, yp_b, yp_c)
     out["heldout"]["delta"] = {
         "metric": "accuracy",                      # headline never switches (no silent fallback)
         "baseline": b["accuracy"], "calibrated": c["accuracy"],
         "delta": c["accuracy"] - b["accuracy"],
+        "delta_ci95": delta_ci,
+        "straddles_zero": delta_ci[0] <= 0.0 <= delta_ci[1],
+        **_mcnemar_exact(yt, yp_b, yp_c),
     }
     out["heldout"]["beats_baseline"] = c["accuracy"] > b["accuracy"]   # tie = FAIL (checklist B)
+    calib_labels = [g["label"] for g in gold if g["split"] == "calibration"]
+    if calib_labels:
+        cnts = Counter(calib_labels)
+        top = max(cnts.values())
+        maj = min(lbl for lbl, n_ in cnts.items() if n_ == top)   # deterministic tie-break
+        maj_acc = sum(t == maj for t in yt) / len(yt)
+    else:
+        maj, maj_acc = None, None
+    out["heldout"]["majority_label_baseline"] = {"label": maj, "accuracy": maj_acc}
     return out
 
 
