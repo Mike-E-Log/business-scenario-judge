@@ -20,4 +20,7 @@ python scoring/score.py --gold data/gold_set.jsonl --pred data/predictions.jsonl
 ```
 
 STUB delta: accuracy 0.50 → 0.75 (placeholder numbers; replaced by the real
-held-out run before ship).
+held-out run before ship). Note: against the current STUB data files this
+command intentionally raises the held-out floor guard (the stub gold set is
+below the frozen ≥10-item/≥25% floor); it validates end-to-end once the real
+labeled data lands.

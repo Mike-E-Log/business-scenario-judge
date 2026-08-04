@@ -129,8 +129,12 @@ def _paired_gold(n_held=10, n_cal=4):
 
 def test_paired_delta_ci_is_zero_when_judges_identical_but_half_right():
     # Both judges correct on the SAME 5 of 10 held-out items -> every resample's
-    # delta is exactly 0. Differencing two per-judge CIs (the wrong implementation)
-    # yields a wide interval here — this fixture discriminates.
+    # delta is exactly 0, so the paired CI is exactly [0, 0]. Interval-style
+    # differencing of the two per-judge CIs ([cal_lo - base_hi, cal_hi - base_lo])
+    # yields a wide interval here and fails. (Caveat: an elementwise diff of two
+    # independently-run _ci95 lists coincides with the paired result because
+    # _ci95 reseeds the same SEED — this fixture does not discriminate that
+    # specific variant.)
     gold = _paired_gold()
     preds = []
     for i, g in enumerate([g for g in gold if g["split"] == "heldout"]):

@@ -1,6 +1,6 @@
 # tests/test_readme_numbers.py
-"""The README's headline delta must equal metrics/results.json — the
-prose-vs-computed drift this pins already happened once (see the 2026-08-04 audit)."""
+"""The README's headline delta must equal metrics/results.json — prose numbers
+and computed numbers drift apart silently without a pin like this."""
 import json
 import re
 from pathlib import Path

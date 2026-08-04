@@ -5,7 +5,10 @@ FROZEN acceptance checklist's strict-greater rule is the PASS bar —
 significance is honesty framing, never the bar.
 
 - **Held-out size:** n = max(15, ceil(0.25 × final_gold_count)) — never below
-  the frozen floor (≥10 items AND ≥25%) at any gold-set size.
+  the frozen floor (≥10 items AND ≥25%) at any gold-set size. If the labeling
+  timebox yields fewer than 40 gold items, the n=15 target yields to
+  n = max(10, ceil(0.25 × final_gold_count)) and the shortfall is disclosed
+  in the results (the frozen floor still binds; the timebox never expands).
 - **Split:** drawn ONCE before calibration starts; assignment committed
   (`split` field in `data/gold_set.jsonl`); held-out items never read during
   calibration.

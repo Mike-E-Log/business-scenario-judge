@@ -139,6 +139,14 @@ def test_slash_tokens_become_tooling_fragments(tmp_path, monkeypatch):
     assert main([str(dirty)]) == 1
 
 
+def test_backslash_authored_tooling_token_matches_forward_slash_text():
+    # code-review finding: a Windows-native backslash token must still catch
+    # the same fragment written with forward slashes (and vice versa)
+    rx = build_class_regexes(FAKE, tooling=(r"private\tools\secret_tool.py",))
+    assert "tooling-path" in scan_bytes(b"run private/tools/secret_tool.py now", rx)
+    assert "tooling-path" in scan_bytes(rb"run private\tools\secret_tool.py now", rx)
+
+
 def test_self_test_passes_with_tokens_and_fails_without(tmp_path, monkeypatch):
     monkeypatch.setenv("LEAK_TOKENS", f"{FAKE},{FAKE_TOOL}")
     assert main(["--self-test"]) == 0

@@ -4,7 +4,8 @@
 Tokens come from the environment (LEAK_TOKENS comma-separated, else USERNAME) —
 NEVER from committed literals or command-line literals. A LEAK_TOKENS entry
 containing a slash is a tooling-path fragment; the rest are usernames.
-Exit codes: 0 clean, 1 hits found, 2 configuration error.
+Exit codes: 0 clean / self-test OK, 1 hits found / self-test failed,
+2 configuration error.
 """
 from __future__ import annotations
 
@@ -31,8 +32,10 @@ def build_class_regexes(username: str, tooling: tuple[str, ...] = ()) -> dict[st
         "bare-username": rf"(?<![A-Za-z0-9_]){u}(?![A-Za-z0-9_])",
     }
     if tooling:  # never a committed literal — arrives via LEAK_TOKENS
+        # normalize to forward slashes first so a backslash-authored token
+        # still matches forward-slash occurrences (and vice versa)
         pats["tooling-path"] = "|".join(
-            re.escape(t).replace("/", r"[\\/]+") for t in tooling)
+            re.escape(t.replace("\\", "/")).replace("/", r"[\\/]+") for t in tooling)
     return {name: re.compile(p, re.IGNORECASE) for name, p in pats.items()}
 
 
