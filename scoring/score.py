@@ -30,13 +30,20 @@ def _ci95(y_true, y_pred):
 
 def compute_metrics(gold, preds):
     by_judge = {"baseline": {}, "calibrated": {}}
+    gold_ids = {g["item_id"] for g in gold}
     for p in preds:
         if p["judge"] not in by_judge:
             raise ValueError(f"unexpected judge {p['judge']!r} on item {p['item_id']!r}")
+        if p["item_id"] not in gold_ids:
+            raise ValueError(f"unknown item_id {p['item_id']!r} not in gold set")
         if p["item_id"] in by_judge[p["judge"]]:
             raise ValueError(f"duplicate prediction {p['judge']}/{p['item_id']}")
         by_judge[p["judge"]][p["item_id"]] = p["label"]
     held = [g for g in gold if g["split"] == "heldout"]
+    if len(held) < 10 or len(held) < 0.25 * len(gold):
+        raise ValueError(
+            f"heldout split below FROZEN floor: {len(held)} of {len(gold)} gold "
+            "(need >=10 items and >=25%)")
     missing = [(j, g["item_id"]) for j, jl in by_judge.items()
                for g in held if g["item_id"] not in jl]
     if missing:
@@ -52,8 +59,11 @@ def compute_metrics(gold, preds):
                          "cohen_kappa": _kappa(yt, yp)}
         out["heldout"][judge] = scores[judge]
     b, c = scores["baseline"], scores["calibrated"]
-    metric = "accuracy" if c["accuracy"] != b["accuracy"] else "cohen_kappa"
-    out["heldout"]["delta"] = {"metric": metric, "baseline": b[metric], "calibrated": c[metric]}
+    out["heldout"]["delta"] = {
+        "metric": "accuracy",                      # headline never switches (no silent fallback)
+        "baseline": b["accuracy"], "calibrated": c["accuracy"],
+        "delta": c["accuracy"] - b["accuracy"],
+    }
     out["heldout"]["beats_baseline"] = c["accuracy"] > b["accuracy"]   # tie = FAIL (checklist B)
     return out
 

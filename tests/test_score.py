@@ -7,7 +7,7 @@ def _gold(n=20):
     random.seed(7)
     return [{"item_id": f"i{k}", "question": "q", "answer_a": "a", "answer_b": "b",
              "label": random.choice([0, 1, 2]),
-             "split": "heldout" if k < 8 else "calibration",
+             "split": "heldout" if k < 10 else "calibration",   # 10/20 = 50%: clears both floors
              "tags": ["wrong-slot-value"] if k % 3 == 0 else ["unhelpful-hedging"]}
             for k in range(n)]
 
@@ -29,11 +29,13 @@ def test_heldout_accuracy_and_delta():
     assert m["heldout"]["beats_baseline"] is True
 
 
-def test_tie_falls_back_to_kappa_delta():
+def test_tie_keeps_accuracy_headline():
     gold = _gold()
     preds = [p for p in _preds(gold, flip_for_baseline=0)]  # identical judges
     m = compute_metrics(gold, preds)
-    assert m["heldout"]["beats_baseline"] is False           # tie stamps FAIL
+    assert m["heldout"]["beats_baseline"] is False            # tie stamps FAIL (FROZEN B)
+    assert m["heldout"]["delta"]["metric"] == "accuracy"      # headline never switches
+    assert m["heldout"]["delta"]["delta"] == 0.0
 
 
 def test_bootstrap_ci_present_and_ordered():
@@ -74,13 +76,14 @@ def test_missing_heldout_prediction_raises_with_names():
 
 
 def test_degenerate_single_label_stays_valid_json():
-    # One held-out item, both judges agree: sklearn kappa is NaN there —
+    # Single-label heldout, both judges agree: sklearn kappa is NaN there —
     # the committed results file must stay strict-JSON (no NaN literals).
+    # (Fixture sized 10/14 = 71% heldout to clear the FROZEN floor guards.)
     import json
-    gold = [{"item_id": "i0", "question": "q", "answer_a": "a", "answer_b": "b",
-             "label": 0, "split": "heldout", "tags": ["wrong-slot-value"]},
-            {"item_id": "i1", "question": "q", "answer_a": "a", "answer_b": "b",
-             "label": 1, "split": "calibration", "tags": ["unhelpful-hedging"]}]
+    gold = ([{"item_id": f"h{k}", "question": "q", "answer_a": "a", "answer_b": "b",
+              "label": 0, "split": "heldout", "tags": ["wrong-slot-value"]} for k in range(10)]
+            + [{"item_id": f"c{k}", "question": "q", "answer_a": "a", "answer_b": "b",
+                "label": 1, "split": "calibration", "tags": ["unhelpful-hedging"]} for k in range(4)])
     preds = [{"item_id": g["item_id"], "judge": j, "label": g["label"]}
              for g in gold for j in ("baseline", "calibrated")]
     m = compute_metrics(gold, preds)
@@ -88,3 +91,30 @@ def test_degenerate_single_label_stays_valid_json():
     for judge in ("baseline", "calibrated"):
         k = m["heldout"][judge]["cohen_kappa"]
         assert k is None or isinstance(k, float)
+
+
+def test_heldout_below_10_items_raises():
+    import pytest
+    gold = _gold(40)                       # helper marks k<10 heldout -> 10 items
+    for g in gold[9:10]:
+        g["split"] = "calibration"         # now 9 heldout of 40
+    preds = _preds(gold)
+    with pytest.raises(ValueError, match="FROZEN floor"):
+        compute_metrics(gold, preds)
+
+
+def test_heldout_below_25_percent_raises():
+    import pytest
+    gold = _gold(60)                       # 10 heldout of 60 = 16.7% < 25%
+    preds = _preds(gold)
+    with pytest.raises(ValueError, match="FROZEN floor"):
+        compute_metrics(gold, preds)
+
+
+def test_unknown_item_id_raises():
+    import pytest
+    gold = _gold()
+    preds = _preds(gold)
+    preds.append({"item_id": "ghost-item", "judge": "baseline", "label": 0})
+    with pytest.raises(ValueError, match="unknown item_id.*ghost-item"):
+        compute_metrics(gold, preds)
