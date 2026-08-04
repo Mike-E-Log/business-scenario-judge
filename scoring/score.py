@@ -3,6 +3,7 @@ import argparse
 import json
 import math
 import random
+import sys
 from collections import Counter
 from pathlib import Path
 
@@ -111,10 +112,20 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--gold", required=True); ap.add_argument("--pred", required=True)
     ap.add_argument("--out", required=True)
+    ap.add_argument("--check", action="store_true",
+                    help="recompute and compare against --out; never overwrites")
     a = ap.parse_args()
     gold = [json.loads(x) for x in Path(a.gold).read_text(encoding="utf-8").splitlines() if x]
     preds = [json.loads(x) for x in Path(a.pred).read_text(encoding="utf-8").splitlines() if x]
-    Path(a.out).write_text(json.dumps(compute_metrics(gold, preds), indent=2), encoding="utf-8")
+    result = compute_metrics(gold, preds)
+    if a.check:
+        committed = json.loads(Path(a.out).read_text(encoding="utf-8"))
+        if committed != result:
+            print("MISMATCH: committed metrics do not equal recomputation", file=sys.stderr)
+            sys.exit(1)
+        print("OK: committed metrics match recomputation")
+        return
+    Path(a.out).write_text(json.dumps(result, indent=2), encoding="utf-8")
 
 
 if __name__ == "__main__":

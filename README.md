@@ -9,7 +9,7 @@ text lands at export).
 ## Reproduce the metrics (no API key needed)
 
 ```
-python scoring/score.py --gold data/gold_set.jsonl --pred data/predictions.jsonl --out metrics/results.json
+python scoring/score.py --gold data/gold_set.jsonl --pred data/predictions.jsonl --out metrics/results.json --check
 ```
 
 STUB delta: accuracy 0.50 → 0.75 (placeholder numbers; replaced by the real
