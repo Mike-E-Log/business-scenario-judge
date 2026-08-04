@@ -1,0 +1,9 @@
+{
+  "STUB": true,
+  "note": "Placeholder metrics file. Real numbers are written by scoring/score.py at export (Task B7).",
+  "heldout": {
+    "baseline": {"accuracy": 0.5},
+    "calibrated": {"accuracy": 0.75},
+    "delta": {"metric": "accuracy", "baseline": 0.5, "calibrated": 0.75}
+  }
+}

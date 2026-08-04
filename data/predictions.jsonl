@@ -1,0 +1,4 @@
+{"item_id": "stub_001", "judge": "baseline", "label": 0}
+{"item_id": "stub_001", "judge": "calibrated", "label": 0}
+{"item_id": "stub_002", "judge": "baseline", "label": 0}
+{"item_id": "stub_002", "judge": "calibrated", "label": 1}

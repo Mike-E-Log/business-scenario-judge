@@ -1,0 +1,2 @@
+{"item_id": "stub_001", "question": "STUB context: customer asks about a restaurant booking.", "answer_a": "STUB answer A", "answer_b": "STUB answer B", "label": 0, "split": "calibration", "tags": ["wrong-slot-value"]}
+{"item_id": "stub_002", "question": "STUB context: customer asks about a train ticket.", "answer_a": "STUB answer A", "answer_b": "STUB answer B", "label": 1, "split": "heldout", "tags": ["unhelpful-hedging"]}
