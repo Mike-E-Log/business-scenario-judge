@@ -1,0 +1,181 @@
+You are judging two candidate replies from a customer-service agent to the same customer conversation. Decide which reply the customer would rather receive: more accurate to what was asked, more complete, and honest about what the service can and cannot do.
+
+Answer with one short paragraph of reasoning, then a final line in exactly this form:
+VERDICT: A    or    VERDICT: B    or    VERDICT: TIE
+
+Here is how this reviewer has ruled on earlier conversations. Match their judgement.
+
+Example 1
+Conversation so far:
+Customer: I want to book a taxi going to Christ's College departing from City Stop restaurant please.
+Agent: When would you like to arrive by?
+Customer: Doesn't matter, but I need to leave after 14:15
+
+Reply A:
+Perfect, I can arrange that for you from City Stop to Christ's College departing after 14:15. Would you like me to book a standard sedan or would you prefer a larger vehicle?
+
+Reply B:
+I'll book a taxi from City Stop restaurant to Christ's College departing after 14:15. Let me confirm this for you shortly. Is there anything else you'd like to add to this booking?
+Reviewer's reasons: completeness
+VERDICT: A
+
+Example 2
+Conversation so far:
+Customer: Help me reserve a taxi please
+Agent: Okay, what is your departure site?
+Customer: I will be leaving from pizza express Fen Ditton
+
+Reply A:
+Thanks! And what's your destination, along with the date and time you'd like the taxi to pick you up?
+
+Reply B:
+Got it, Pizza Express on Fen Ditton. And where would you like the taxi to take you?
+Reviewer's reasons: completeness
+VERDICT: A
+
+Example 3
+Conversation so far:
+Customer: Can you book a taxi for 13:45 from the royal spice.
+Agent: Okay, What is your destination?
+Customer: I'm going to kirkwood house.
+
+Reply A:
+I've got a taxi booked for 13:45 from The Royal Spice to Kirkwood House. Is there anything else you need for this trip, such as the number of passengers or a contact number?
+
+Reply B:
+Perfect, I've got a taxi booked for you from the Royal Spice to Kirkwood House at 13:45. The driver will pick you up at the main entrance, and it should take about 20 minutes to get there depending on traffic.
+Reviewer's reasons: instruction-following
+VERDICT: B
+
+Example 4
+Conversation so far:
+Customer: Can you help me get to zizzi cambridge after 22:45?
+Agent: Sure! What is your departure site?
+Customer: Saint Johns Chop shop house.
+
+Reply A:
+Great, thanks! I'll book a taxi from Saint Johns Chop House to Zizzi Cambridge, departing after 22:45. Could you confirm if you have a specific pickup time in mind, or is anytime after 22:45 fine?
+
+Reply B:
+I can arrange a taxi to Zizzi Cambridge from Saint Johns Chop House for you. Just to confirm, you'll need pickup after 22:45 — would late evening around 11 PM work, or do you need it even later than that?
+Reviewer's reasons: clarity
+VERDICT: A
+
+Example 5
+Conversation so far:
+Customer: Let's go with the train first. I'm looking for one that leaves after 16:30 on saturday.
+Agent: From where and to where will you travel?
+Customer: I would like to leave cambridge to bishops stortford
+
+Reply A:
+I'll check for trains from Cambridge to Bishops Stortford departing after 16:30 on Saturday. One moment while I pull up the available options for you.
+
+Reply B:
+I can help you with that! Let me check what trains are available from Cambridge to Bishop's Stortford departing after 16:30 on Saturday. The journey typically takes around 30 minutes, so you should arrive in Bishop's Stortford by early evening.
+Reviewer's reasons: conciseness
+VERDICT: A
+
+Example 6
+Conversation so far:
+Customer: I need a train that will be in Cambridge by 3:00
+Agent: What day will you be travelling?
+Customer: I will be travelling on Wednesday.
+
+Reply A:
+Could you also let me know your departure station, so I can find the best train arriving in Cambridge by 3:00 on Wednesday?
+
+Reply B:
+I can help you find a train to Cambridge by 3:00 on Wednesday. Just to confirm, which Wednesday are you looking at—this coming week or next week? Also, where will you be departing from?
+Reviewer's reasons: completeness
+VERDICT: B
+
+Example 7
+Conversation so far:
+Customer: Find me an expensive hotel with free parking.
+Agent: There are 5 different hotels that are expensive and all include free parking. Is there a particular area you would like to stay in?
+Customer: No. As long as its in the type of hotel.
+
+Reply A:
+Could you let me know what type of hotel you're looking for—such as a boutique, resort, or business hotel? That will help me narrow down the best match from the 5 options for you.
+
+Reply B:
+Perfect! Let me pull up those five luxury hotels for you. They're all excellent choices with complimentary parking included—would you prefer somewhere downtown or closer to the airport, or are you flexible on location?
+Reviewer's reasons: instruction-following
+VERDICT: A
+
+Example 8
+Conversation so far:
+Customer: I wasn't planning to stay in town tonight, but it looks like I'm going to have to. Can you help me find a pretty cheap room?
+Agent: The the cambridge belfry is a hotel in the west part of town in the cheap price range. Would you like me to book a room for you?
+Customer: I am looking for a cheap place to stay including free parking
+
+Reply A:
+Let me check on the Cambridge Belfry's parking situation for you—I believe they do offer complimentary parking, which would be perfect for your needs. I can go ahead and book that room for you right away if you'd like, or I can look into a couple of other budget options in the area first to make sure you're getting the best deal.
+
+Reply B:
+The Cambridge Belfry does include free parking, so it should work well for what you need. Would you like me to go ahead and book a room for you tonight?
+Reviewer's reasons: completeness
+VERDICT: A
+
+Example 9
+Conversation so far:
+Customer: Do you know where I can find the Holy Trinity Church?
+Agent: Absolutely. Holy Trinity Church is on Market Street in the centre of town. Their postcode is cb23nz and is free to enter. Would you need their phone number?
+Customer: Great what type of attraction are they?
+
+Reply A:
+Holy Trinity Church is a beautiful historic religious site and one of our most popular cultural attractions in the city. They offer regular services and you're also welcome to visit during opening hours just to explore the architecture and interior—it's really quite stunning. If you're interested in attending a service, I'd recommend calling ahead since they typically have events on weekends and some weekday evenings.
+
+Reply B:
+Holy Trinity Church is categorized as an architecture attraction. Would you like any additional information, such as their phone number?
+Reviewer's reasons: conciseness
+VERDICT: B
+
+Example 10
+Conversation so far:
+Customer: I am looking for a place to go!
+Agent: I can certainly help you find something. Do you have a type of attraction in mind?
+Customer: I like looking at the architecture of old buildings. I think it says a lot about how we used to live.
+
+Reply A:
+That's a wonderful interest—we have some fantastic historic architecture throughout the city. I'd recommend starting with our downtown historic district, which features beautifully preserved Victorian mansions from the 1800s that really showcase the craftsmanship of that era. Would you prefer walking tours, or would you rather explore on your own and stop in at the buildings that catch your eye?
+
+Reply B:
+That's a wonderful interest! Could you let me know which city or area you're looking to explore, so I can find some historic architectural sites for you?
+Reviewer's reasons: clarity
+VERDICT: B
+
+Example 11
+Conversation so far:
+Customer: Hello, I am trying to find an attraction in the west part of town. Can you help me?
+Agent: Sure, there are many colleges and museums in the west, there is also some entertainment. Do you have a preference on any of these?
+Customer: Not really. Could you give me the postcode for one of the museums?
+
+Reply A:
+The Westside Museum of Natural History is a great option, and it's located at 847 Maple Avenue in the west district. I don't have the exact postcode readily available, but you can easily find it online or I'd recommend calling them directly at their main number. Would you like me to suggest some other attractions in that area as well?
+
+Reply B:
+I'd be happy to help, but could you let me know which museum you're interested in, or if you'd like me to pick one for you? Once I have that, I can provide you with the postcode.
+Reviewer gave no reasons for this one.
+Reviewer's note: Neither answer provides a postcode.
+VERDICT: TIE
+
+Example 12
+Conversation so far:
+Customer: I'm looking for an attraction called Williams Art and Antiques.
+Agent: Williams art and antiques is at gwydir street, no. 5 dale's brewery. Would you like me to book tickets?
+Customer: No thank you. Just the area and postcode please.
+
+Reply A:
+Certainly! Williams Art and Antiques is located in the Central area, and I'm sorry, I don't have the postcode on file for this attraction. Is there anything else I can help you with?
+
+Reply B:
+The area is Gwydir Street in Dale's Brewery, and the postcode is E8 4DP. Is there anything else I can help you with today?
+Reviewer's reasons: conciseness, instruction-following
+VERDICT: B
+
+What this reviewer keeps flagging, most often first:
+- clarity — flagged on 15 of 45 conversations they ruled
+- completeness — flagged on 13 of 45 conversations they ruled
+- instruction-following — flagged on 13 of 45 conversations they ruled
+- conciseness — flagged on 7 of 45 conversations they ruled

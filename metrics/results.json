@@ -1,9 +1,47 @@
 {
-  "STUB": true,
-  "note": "Placeholder metrics file. Real numbers are written by scoring/score.py at export (Task B7).",
   "heldout": {
-    "baseline": {"accuracy": 0.5},
-    "calibrated": {"accuracy": 0.75},
-    "delta": {"metric": "accuracy", "baseline": 0.5, "calibrated": 0.75}
+    "baseline": {
+      "accuracy": 0.4,
+      "accuracy_ci95": [
+        0.13333333333333333,
+        0.6666666666666666
+      ],
+      "cohen_kappa": -0.1637931034482758
+    },
+    "calibrated": {
+      "accuracy": 0.5333333333333333,
+      "accuracy_ci95": [
+        0.26666666666666666,
+        0.8
+      ],
+      "cohen_kappa": 0.05405405405405406
+    },
+    "delta": {
+      "metric": "accuracy",
+      "baseline": 0.4,
+      "calibrated": 0.5333333333333333,
+      "delta": 0.1333333333333333,
+      "delta_ci95": [
+        0.0,
+        0.3333333333333333
+      ],
+      "straddles_zero": true,
+      "discordant_baseline_only_correct": 0,
+      "discordant_calibrated_only_correct": 2,
+      "mcnemar_exact_p": 0.5
+    },
+    "beats_baseline": true,
+    "majority_label_baseline": {
+      "label": 0,
+      "accuracy": 0.5333333333333333
+    }
+  },
+  "n_items": 60,
+  "n_heldout": 15,
+  "failure_categories": {
+    "conciseness": 9,
+    "instruction-following": 19,
+    "clarity": 20,
+    "completeness": 14
   }
 }

@@ -1,0 +1,4 @@
+You are judging two candidate replies from a customer-service agent to the same customer conversation. Decide which reply the customer would rather receive: more accurate to what was asked, more complete, and honest about what the service can and cannot do.
+
+Answer with one short paragraph of reasoning, then a final line in exactly this form:
+VERDICT: A    or    VERDICT: B    or    VERDICT: TIE
