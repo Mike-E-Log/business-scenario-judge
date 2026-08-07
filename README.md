@@ -31,6 +31,32 @@ This is a **constructed** demonstration, not a deployment.
 - **No real client work, and no real customer data, is involved here.** Nothing
   in this repository records how any deployed system behaved.
 
+## Built with my own eval software
+
+The gold set here was produced in **Eval Studio**, a local evaluation
+workbench I built for this project: blind pairwise grading with reason tags,
+a blind retest that measures my own consistency, and a teaching layer that
+explains each phase of the protocol in place.
+
+![The grading surface: six-phase board on top, the current phase's teaching in place, one real matchup below](docs/screenshots/eval-studio-grading.png)
+*The grading surface, captured mid-run on a fresh instance. The six-phase
+board tracks where the run is, and model attribution is stripped so a ruling
+cannot pattern-match its way out of judging.*
+
+![The blind retest's results screen: 80% agreement, 55–93% interval, kappa 0.526](docs/screenshots/eval-studio-retest-results.png)
+*This project's actual retest result: 80% self-agreement (12 of 15 matched),
+55–93% Wilson interval, κ 0.526 — the same single-annotator ceiling this
+README discloses in prose.*
+
+![A phase page: dated debugging history, cause-then-fix](docs/screenshots/eval-studio-phase-page.png)
+*Each phase page records what ran and what went wrong — dated,
+cause-then-fix, including the two live API failures fixed test-first during
+the judge runs.*
+
+![The Learn hub: six phases with live status for completed ones](docs/screenshots/eval-studio-learn-hub.png)
+*The six phases as they actually ran. Results stay payload-gated: a number
+appears only once its phase has genuinely produced it.*
+
 ## Why validate a judge at all
 
 Human labels are the expensive part of evaluation — one published estimate
