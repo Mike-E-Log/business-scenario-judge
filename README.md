@@ -31,6 +31,25 @@ This is a **constructed** demonstration, not a deployment.
 - **No real client work, and no real customer data, is involved here.** Nothing
   in this repository records how any deployed system behaved.
 
+## Why validate a judge at all
+
+Human labels are the expensive part of evaluation — one published estimate
+puts expert annotation at $8 per sample ([Eugene Yan's survey of LLM
+evaluators](https://eugeneyan.com/writing/llm-evaluators/), citing the
+Shepherd paper) — while an LLM judge costs a small fraction of that per
+verdict. The cheap judge is only a defensible substitute if its agreement
+with human judgment is measured first: OpenAI's evaluation guidance says to
+"validate agreement against your human labels before optimizing for cost or
+latency" ([evaluation best
+practices](https://developers.openai.com/api/docs/guides/evaluation-best-practices)),
+and the MT-Bench study reported strong LLM judges reaching over 80%
+agreement with human preferences — the level humans reach with each other
+([Zheng et al. 2023](https://arxiv.org/abs/2306.05685)). That measurement —
+judge against human rulings, with intervals honest about a small n — is
+what this repository practices. It claims no cost saving of its own; it
+demonstrates the validation step that makes replacing expensive labels with
+a cheap judge defensible.
+
 ## What the numbers can and cannot support
 
 - **All labels come from a single annotator.** One person's judgment is the
