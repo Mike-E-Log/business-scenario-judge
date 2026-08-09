@@ -11,6 +11,7 @@ On the held-out split the calibrated judge scored higher than the baseline, 53% 
 ```
 pip install -r requirements.txt
 python scoring/score.py --gold data/gold_set.jsonl --pred data/predictions.jsonl --out metrics/results.json
+python scoring/retest_stats.py --retest data/retest.jsonl --items data/retest_items.json --out metrics/retest.json
 ```
 
 Every judge prediction is committed in `data/predictions.jsonl`, so the numbers
@@ -87,11 +88,12 @@ a cheap judge defensible.
   remembered the earlier ruling; answers were recorded once, at the first
   ruling of each scenario, and the probe itself can influence later rulings —
   that reactivity is disclosed here, not designed away.
-  Restricted to the 15 scenarios whose probe answer was no/unsure, agreement was 80%. The 15 retest scenarios are the fixed seeded
-  draw committed in `retest_items.json` before the retest ran; agreement is
-  exact match on the three-way verdict (A better / B better / tie). A gap of
-  a few days did not eliminate recall; the self-agreement figure is
-  an upper bound on this annotator's consistency.
+  Restricted to the 15 scenarios whose probe answer was no/unsure, agreement was 80% (the restriction is not selective here — every probe answer was no). The 15 retest scenarios are the fixed seeded
+  draw committed in `data/retest_items.json` before the retest ran; agreement is
+  exact match on the three-way verdict (A better / B better / tie). The
+  annotator answered no or unsure on every recall probe; a self-report cannot
+  rule recall out, so the self-agreement figure remains an upper bound on this
+  annotator's consistency.
 - **The split was fixed before calibration existed** — 15 held-out
   of 60 — and the calibrated prompt is built only from the
   calibration side.
@@ -106,6 +108,9 @@ a cheap judge defensible.
 
 - `data/gold_set.jsonl` — scenarios, the annotator's ruling, split, and reason tags
 - `data/predictions.jsonl` — every prediction from both judges
+- `data/retest_items.json` — the fixed seeded draw of 15 scenarios ruled twice
+- `data/retest.jsonl` — both rulings and the recall-probe answer for each retest scenario
+- `scoring/retest_stats.py`, `metrics/retest.json` — the retest recompute and its committed output
 - `judge/baseline_prompt.txt`, `judge/calibrated_prompt.txt` — the exact prompts  (the calibrated prompt embeds the annotator's verbatim written notes for its example rulings)
 
 - `metrics/results.json`, `metrics/results.md` — the recomputed numbers

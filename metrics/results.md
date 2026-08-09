@@ -6,6 +6,7 @@ Recompute these numbers yourself — no API key needed:
 
 ```
 python scoring/score.py --gold data/gold_set.jsonl --pred data/predictions.jsonl --out metrics/results.json
+python scoring/retest_stats.py --retest data/retest.jsonl --items data/retest_items.json --out metrics/retest.json
 ```
 
 ## Held-out split (15 of 60 scenarios)
