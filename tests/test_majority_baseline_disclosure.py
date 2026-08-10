@@ -22,9 +22,13 @@ def test_readme_discloses_majority_baseline():
     # Clause pin, not a bare \btie — README independently contains the
     # unrelated "(A better / B better / tie)", which a bare pin matches.
     tie_clause = re.search(r"only ties it", readme)
-    if MAJ["accuracy"] >= RESULTS["heldout"]["calibrated"]["accuracy"]:
-        assert tie_clause, ("majority-class baseline ties or beats the "
-                            "calibrated judge; README must say so")
+    cal = RESULTS["heldout"]["calibrated"]["accuracy"]
+    if MAJ["accuracy"] == cal:
+        assert tie_clause, ("majority-class baseline ties the calibrated "
+                            "judge; README must say so")
+    elif MAJ["accuracy"] > cal:
+        assert not tie_clause, ("majority-class baseline now BEATS the "
+                                "calibrated judge; 'only ties it' is stale")
     else:
         assert not tie_clause, "README claims a tie the data no longer shows"
 
