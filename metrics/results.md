@@ -2,6 +2,8 @@
 
 On the held-out split the calibrated judge scored higher than the baseline, 53% against 40%, but the 95% intervals overlap — this run does not establish a real difference.
 
+A blunter yardstick: the majority-class baseline — always answering "A better", the calibration split's most common label — scores the same 53% on this split, so the calibrated judge only ties it (`majority_label_baseline` in `results.json`; no interval or kappa is committed for it).
+
 Recompute these numbers yourself — no API key needed:
 
 ```
@@ -15,6 +17,7 @@ python scoring/retest_stats.py --retest data/retest.jsonl --items data/retest_it
 |---|---|---|---|
 | baseline | 0.400 | 0.133–0.667 | -0.164 |
 | calibrated | 0.533 | 0.267–0.800 | 0.054 |
+| majority-class (always "A better") | 0.533 | — | — |
 
 Reported difference is on **accuracy**: 0.400 to 0.533.
 

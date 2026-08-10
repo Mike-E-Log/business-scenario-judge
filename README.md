@@ -6,6 +6,8 @@ split that no calibration code ever reads.
 
 On the held-out split the calibrated judge scored higher than the baseline, 53% against 40%, but the 95% intervals overlap — this run does not establish a real difference.
 
+A blunter yardstick: the majority-class baseline — always answering "A better", the calibration split's most common label — scores the same 53% on this split, so the calibrated judge only ties it (`majority_label_baseline` in `metrics/results.json`).
+
 ## Reproduce the metrics (no API key needed)
 
 ```

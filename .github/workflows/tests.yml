@@ -11,3 +11,5 @@ jobs:
         with: { python-version: "3.13" }   # matches the pinned dev environment the requirements resolve against
       - run: pip install -r requirements.txt
       - run: python -m pytest tests -q
+      # recompute metrics from the committed data; a stale results.json fails the push
+      - run: python scoring/score.py --gold data/gold_set.jsonl --pred data/predictions.jsonl --out metrics/results.json --check
