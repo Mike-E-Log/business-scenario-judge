@@ -4,9 +4,9 @@ An LLM judge calibrated to one annotator's recorded rulings on business-style
 customer-service scenarios, compared against a zero-shot baseline on a held-out
 split that no calibration code ever reads.
 
-On the held-out split the calibrated judge scored higher than the baseline, 53% against 40%, but the 95% intervals overlap — this run does not establish a real difference.
+On the held-out split the calibrated judge scored higher than the baseline, 53% against 40%, but the 95% intervals overlap. This run does not establish a real difference.
 
-A blunter yardstick: the majority-class baseline — always answering "A better", the calibration split's most common label — scores the same 53% on this split, so the calibrated judge only ties it (`majority_label_baseline` in `metrics/results.json`).
+A blunter yardstick: the majority-class baseline (always answering "A better", the calibration split's most common label) scores the same 53% on this split, so the calibrated judge only ties it (`majority_label_baseline` in `metrics/results.json`).
 
 ## Reproduce the metrics (no API key needed)
 
@@ -48,11 +48,11 @@ cannot pattern-match its way out of judging.*
 
 ![The blind retest's results screen: 80% agreement, 55–93% interval, kappa 0.526](docs/screenshots/eval-studio-retest-results.png)
 *This project's actual retest result: 80% self-agreement (12 of 15 matched),
-55–93% Wilson interval, κ 0.526 — the same single-annotator ceiling this
+55–93% Wilson interval, κ 0.526. The same single-annotator ceiling this
 README discloses in prose.*
 
 ![A phase page: dated debugging history, cause-then-fix](docs/screenshots/eval-studio-phase-page.png)
-*Each phase page records what ran and what went wrong — dated,
+*Each phase page records what ran and what went wrong: dated,
 cause-then-fix, including the two live API failures fixed test-first during
 the judge runs.*
 
@@ -62,20 +62,20 @@ appears only once its phase has genuinely produced it.*
 
 ## Why validate a judge at all
 
-Human labels are the expensive part of evaluation — one published estimate
+Human labels are the expensive part of evaluation: one published estimate
 puts expert annotation at $8 per sample ([Eugene Yan's survey of LLM
 evaluators](https://eugeneyan.com/writing/llm-evaluators/), citing the
-Shepherd paper) — while an LLM judge costs a small fraction of that per
+Shepherd paper), while an LLM judge costs a small fraction of that per
 verdict. The cheap judge is only a defensible substitute if its agreement
 with human judgment is measured first: OpenAI's evaluation guidance says to
 "validate agreement against your human labels before optimizing for cost or
 latency" ([evaluation best
 practices](https://developers.openai.com/api/docs/guides/evaluation-best-practices)),
 and the MT-Bench study reported strong LLM judges reaching over 80%
-agreement with human preferences — the level humans reach with each other
-([Zheng et al. 2023](https://arxiv.org/abs/2306.05685)). That measurement —
-judge against human rulings, with intervals honest about a small n — is
-what this repository practices. It claims no cost saving of its own; it
+agreement with human preferences, the level humans reach with each other
+([Zheng et al. 2023](https://arxiv.org/abs/2306.05685)). That measurement is
+what this repository practices: judge against human rulings, with
+intervals honest about a small n. It claims no cost saving of its own; it
 demonstrates the validation step that makes replacing expensive labels with
 a cheap judge defensible.
 
@@ -84,20 +84,20 @@ a cheap judge defensible.
 - **All labels come from a single annotator.** One person's judgment is the
   gold standard here, so every number inherits their consistency and their
   blind spots.
-- **Self-agreement on a blind retest: 80% over 15 scenarios ruled twice (95% Wilson interval 55%–93% on the raw proportion; chance-corrected Cohen's κ 0.526, reported without a strength label — band labels are not stable at n=15)**, and
-  the two passes were 2–4 days apart — a range, because individual labels carry no timestamps. The retest showed none of the first pass.
+- **Self-agreement on a blind retest: 80% over 15 scenarios ruled twice (95% Wilson interval 55%–93% on the raw proportion; chance-corrected Cohen's κ 0.526, reported without a strength label because band labels are not stable at n=15)**, and
+  the two passes were 2–4 days apart, a range because individual labels carry no timestamps. The retest showed none of the first pass.
   After each retest ruling a one-question probe asked whether the annotator
   remembered the earlier ruling; answers were recorded once, at the first
-  ruling of each scenario, and the probe itself can influence later rulings —
-  that reactivity is disclosed here, not designed away.
-  Restricted to the 15 scenarios whose probe answer was no/unsure, agreement was 80% (the restriction is not selective here — every probe answer was no). The 15 retest scenarios are the fixed seeded
+  ruling of each scenario, and the probe itself can influence later rulings.
+  That reactivity is disclosed here, not designed away.
+  Restricted to the 15 scenarios whose probe answer was no/unsure, agreement was 80% (the restriction is not selective here: every probe answer was no). The 15 retest scenarios are the fixed seeded
   draw committed in `data/retest_items.json` before the retest ran; agreement is
   exact match on the three-way verdict (A better / B better / tie). The
   annotator answered no or unsure on every recall probe; a self-report cannot
   rule recall out, so the self-agreement figure remains an upper bound on this
   annotator's consistency.
-- **The split was fixed before calibration existed** — 15 held-out
-  of 60 — and the calibrated prompt is built only from the
+- **The split was fixed before calibration existed**, 15 held-out
+  of 60, and the calibrated prompt is built only from the
   calibration side.
 - **Known biases not controlled for.** An LLM judging LLM output can show
   self-preference toward text resembling its own, and judges are known to be
@@ -108,12 +108,12 @@ a cheap judge defensible.
 
 ## Layout
 
-- `data/gold_set.jsonl` — scenarios, the annotator's ruling, split, and reason tags
-- `data/predictions.jsonl` — every prediction from both judges
-- `data/retest_items.json` — the fixed seeded draw of 15 scenarios ruled twice
-- `data/retest.jsonl` — both rulings and the recall-probe answer for each retest scenario
-- `scoring/retest_stats.py`, `metrics/retest.json` — the retest recompute and its committed output
-- `judge/baseline_prompt.txt`, `judge/calibrated_prompt.txt` — the exact prompts  (the calibrated prompt embeds the annotator's verbatim written notes for its example rulings)
+- `data/gold_set.jsonl`: scenarios, the annotator's ruling, split, and reason tags
+- `data/predictions.jsonl`: every prediction from both judges
+- `data/retest_items.json`: the fixed seeded draw of 15 scenarios ruled twice
+- `data/retest.jsonl`: both rulings and the recall-probe answer for each retest scenario
+- `scoring/retest_stats.py`, `metrics/retest.json`: the retest recompute and its committed output
+- `judge/baseline_prompt.txt`, `judge/calibrated_prompt.txt`: the exact prompts  (the calibrated prompt embeds the annotator's verbatim written notes for its example rulings)
 
-- `metrics/results.json`, `metrics/results.md` — the recomputed numbers
-- `scoring/score.py` — the recompute-only scorer
+- `metrics/results.json`, `metrics/results.md`: the recomputed numbers
+- `scoring/score.py`: the recompute-only scorer
