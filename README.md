@@ -2,7 +2,9 @@
 
 ## Can you trust an AI to grade another AI? This repo checks.
 
-**An AI judge is only a trustworthy stand-in for a human after you measure how well it matches that human. This repo is that measurement, done honestly: every number recomputes from committed data, tests fail if the key numbers or honesty statements drift, and the unflattering result ships anyway. On the 15 test chats, a blind judge that gives the same answer every time scores 53%, and the taught judge also scores 53%: a tie.**
+- **The idea:** an AI judge is only a trustworthy stand-in for a human after you measure how well it matches that human.
+- **This repo is that measurement, done honestly:** every number recomputes from committed data, and tests fail if the key numbers or honesty statements drift.
+- **The unflattering result ships anyway:** on the 15 test chats, a blind judge that gives the same answer every time scores 53%. The taught judge also scores 53%. A tie.
 
 ## The problem
 
