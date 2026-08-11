@@ -2,23 +2,23 @@
 
 ## Can you trust an AI to grade another AI? This repo checks.
 
-**An AI judge is only a trustworthy stand-in for a human after you measure how well it matches that human. This repo is that measurement, done honestly: every number recomputes from committed data, the tests fail if the words drift from the data, and the unflattering result ships anyway — at this sample size, the taught judge does not clearly beat simple baselines.**
+**An AI judge is only a trustworthy stand-in for a human after you measure how well it matches that human. This repo is that measurement, done honestly: every number recomputes from committed data, tests fail if the key numbers or honesty statements drift, and the unflattering result ships anyway. At this sample size the taught judge only ties a fake judge that always gives one fixed answer.**
 
 ## The problem
 
-Checking AI answers by hand is slow and costly — one published estimate puts expert labels at about $8 per sample ([Eugene Yan's survey of LLM evaluators](https://eugeneyan.com/writing/llm-evaluators/)). So teams ask an AI to grade the AI. That opens a new question: is the AI grader any good? [OpenAI's guidance](https://developers.openai.com/api/docs/guides/evaluation-best-practices) says to check the grader against human picks before trusting it, and the MT-Bench study ([Zheng et al. 2023](https://arxiv.org/abs/2306.05685)) found the best AI judges match human picks over 80% of the time — about as often as humans match each other. This repo practices that first step, and claims no cost saving of its own.
+Checking AI answers by hand is slow and costly: one published estimate puts expert labels at about $8 per sample ([Eugene Yan's survey of LLM evaluators](https://eugeneyan.com/writing/llm-evaluators/), citing the Shepherd paper). So teams ask an AI to grade the AI. That opens a new question: is the AI grader any good? [OpenAI's guidance](https://developers.openai.com/api/docs/guides/evaluation-best-practices) says to "validate agreement against your human labels before optimizing for cost or latency", and the MT-Bench study ([Zheng et al. 2023](https://arxiv.org/abs/2306.05685)) found strong AI judges reach over 80% agreement with human preferences, the level humans reach with each other. This repo practices that first step, and claims no cost saving of its own.
 
 ## What happened here
 
-1. One person read real customer-service chats and picked the better of two AI answers, 60 times.
+1. One person read real customer-service chats and picked between two AI answers, 60 times.
 2. An AI judge was taught (the "calibrated" judge) using 45 of those picks.
-3. The judge was tested on the other 15 chats — held out so the teaching step never read them, and fixed before any teaching existed.
+3. The judge was tested on the other 15 chats, which were held out of the teaching step. Each chat's split is committed in `data/gold_set.jsonl`. The pre-run plan, with a dated correction note on its own timing claims, is in [PREREGISTRATION.md](PREREGISTRATION.md).
 
 ## The honest result
 
-On the 15 held-out chats the taught judge matched the person 53% against 40% for the untaught judge (the "zero-shot baseline"). Sounds like a win — but hold on. The 95% uncertainty ranges overlap, so this run does not establish a real difference. A blunter yardstick: the majority-class baseline (a fake judge that always answers "A better", the most common ruling in the teaching half) also scores 53%, so the taught judge only ties it (`majority_label_baseline` in `metrics/results.json`). That result could be hidden. It is printed instead.
+On the 15 held-out chats the taught judge matched the person 53% against 40% for the untaught judge (the "zero-shot baseline"). Sounds like a win, but hold on. The 95% uncertainty ranges overlap, so this run does not establish a real difference. A blunter yardstick: the majority-class baseline (a fake judge that always answers "A better", the most common ruling in the teaching half) also scores 53%, so the taught judge only ties it (`majority_label_baseline` in `metrics/results.json`). That result could be hidden. It is printed instead.
 
-## Check the numbers yourself — about 2 minutes, no AI account needed
+## Check the numbers yourself (a few minutes, no AI account needed)
 
 ```
 pip install -r requirements.txt
