@@ -1,5 +1,7 @@
 # business-scenario-judge
 
+**The point: an AI judge is only a trustworthy stand-in for human judgment after you measure how well it matches a human. This repo is that measurement, done honestly. Every number recomputes from committed data, the tests fail if the prose drifts from the data, and the unflattering result ships anyway: at this sample size, the taught judge does not clearly beat simple baselines.**
+
 An AI judge taught to match one person's recorded rulings on business-style
 customer-service scenarios. The taught judge (called "calibrated") is compared
 against an untaught one (the "zero-shot baseline") on a held-out set of
@@ -65,16 +67,15 @@ has genuinely produced it.*
 Human rulings are the expensive part of evaluation: one published estimate
 puts expert labels at $8 per sample ([Eugene Yan's survey of LLM
 evaluators](https://eugeneyan.com/writing/llm-evaluators/), citing the
-Shepherd paper), while an AI judge costs a small fraction of that. The cheap
-judge is a defensible substitute only after its agreement with human judgment
-is measured: OpenAI's guidance says to "validate agreement against your human
-labels before optimizing for cost or latency" ([evaluation best
-practices](https://developers.openai.com/api/docs/guides/evaluation-best-practices)),
-and the MT-Bench study found strong AI judges reach over 80% agreement with
-human preferences, the level humans reach with each other
-([Zheng et al. 2023](https://arxiv.org/abs/2306.05685)). This repository
-practices that measurement step, with uncertainty stated honestly at a small
-sample size. It claims no cost saving of its own.
+Shepherd paper), and both [OpenAI's
+guidance](https://developers.openai.com/api/docs/guides/evaluation-best-practices)
+("validate agreement against your human labels before optimizing for cost or
+latency") and the MT-Bench study ([Zheng et al.
+2023](https://arxiv.org/abs/2306.05685): strong AI judges reach over 80%
+agreement with human preferences, the level humans reach with each other)
+make measuring that agreement the first step. This repository practices that
+step, with uncertainty stated honestly at a small sample size, and claims no
+cost saving of its own.
 
 ## What the numbers can and cannot support
 
@@ -85,13 +86,12 @@ sample size. It claims no cost saving of its own.
   the two passes 2–4 days apart, a range because individual rulings carry no
   timestamps. The retest showed none of the first pass. After each retest
   ruling, one question asked whether the annotator remembered the earlier
-  ruling; each answer was recorded once, at the first ruling of each scenario,
-  and the question itself can influence later rulings. That side effect is
-  disclosed here, not designed away.
-  Counting only the 15 scenarios whose answer was no or unsure, agreement was
-  80% (the restriction is not selective here: every answer was no). The 15
-  retest scenarios are the fixed seeded draw committed in
-  `data/retest_items.json` before the retest ran; agreement means an exact
+  ruling; answers were recorded once, at each scenario's first ruling, and the
+  question itself can influence later rulings, a side effect disclosed here,
+  not designed away. Counting only the 15 scenarios whose answer was no or
+  unsure, agreement was 80% (the restriction is not selective here: every
+  answer was no). The 15 retest scenarios are the fixed seeded draw committed
+  in `data/retest_items.json` before the retest ran; agreement means an exact
   match on the three-way verdict (A better / B better / tie). A self-report
   cannot rule memory out, so 80% stays an upper bound on this one person's
   consistency.
