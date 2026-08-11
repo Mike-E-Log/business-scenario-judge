@@ -1,17 +1,24 @@
 # business-scenario-judge
 
-**The point: an AI judge is only a trustworthy stand-in for human judgment after you measure how well it matches a human. This repo is that measurement, done honestly. Every number recomputes from committed data, the tests fail if the prose drifts from the data, and the unflattering result ships anyway: at this sample size, the taught judge does not clearly beat simple baselines.**
+## Can you trust an AI to grade another AI? This repo checks.
 
-An AI judge taught to match one person's recorded rulings on business-style
-customer-service scenarios. The taught judge (called "calibrated") is compared
-against an untaught one (the "zero-shot baseline") on a held-out set of
-scenarios that the teaching step never reads.
+**An AI judge is only a trustworthy stand-in for a human after you measure how well it matches that human. This repo is that measurement, done honestly: every number recomputes from committed data, the tests fail if the words drift from the data, and the unflattering result ships anyway — at this sample size, the taught judge does not clearly beat simple baselines.**
 
-On the held-out scenarios the calibrated judge scored higher than the baseline, 53% against 40%, but the 95% uncertainty ranges overlap. This run does not establish a real difference.
+## The problem
 
-A blunter yardstick: the majority-class baseline (a fake judge that always answers "A better", the most common ruling in the calibration half) also scores 53%, so the calibrated judge only ties it (`majority_label_baseline` in `metrics/results.json`).
+Checking AI answers by hand is slow and costly — one published estimate puts expert labels at about $8 per sample ([Eugene Yan's survey of LLM evaluators](https://eugeneyan.com/writing/llm-evaluators/)). So teams ask an AI to grade the AI. That opens a new question: is the AI grader any good? [OpenAI's guidance](https://developers.openai.com/api/docs/guides/evaluation-best-practices) says to check the grader against human picks before trusting it, and the MT-Bench study ([Zheng et al. 2023](https://arxiv.org/abs/2306.05685)) found the best AI judges match human picks over 80% of the time — about as often as humans match each other. This repo practices that first step, and claims no cost saving of its own.
 
-## Check the numbers yourself (no API key needed)
+## What happened here
+
+1. One person read real customer-service chats and picked the better of two AI answers, 60 times.
+2. An AI judge was taught (the "calibrated" judge) using 45 of those picks.
+3. The judge was tested on the other 15 chats — held out so the teaching step never read them, and fixed before any teaching existed.
+
+## The honest result
+
+On the 15 held-out chats the taught judge matched the person 53% against 40% for the untaught judge (the "zero-shot baseline"). Sounds like a win — but hold on. The 95% uncertainty ranges overlap, so this run does not establish a real difference. A blunter yardstick: the majority-class baseline (a fake judge that always answers "A better", the most common ruling in the teaching half) also scores 53%, so the taught judge only ties it (`majority_label_baseline` in `metrics/results.json`). That result could be hidden. It is printed instead.
+
+## Check the numbers yourself — about 2 minutes, no AI account needed
 
 ```
 pip install -r requirements.txt
@@ -19,93 +26,42 @@ python scoring/score.py --gold data/gold_set.jsonl --pred data/predictions.jsonl
 python scoring/retest_stats.py --retest data/retest.jsonl --items data/retest_items.json --out metrics/retest.json
 ```
 
-Every judge answer is committed in `data/predictions.jsonl`, so everything
-recomputes with no AI calls at all.
+Every judge answer is committed in `data/predictions.jsonl`, so everything recomputes with no AI calls at all.
 
 ## What this is, exactly
 
 A **constructed** demonstration, not a deployed system.
 
-- **Scenarios** are real public data: MultiWOZ 2.2, MIT licence, Copyright (c)
-  2019 Paweł Budzianowski. Each is the opening turns of a real service
-  dialogue, ending on the customer's request.
-- **Both candidate replies are AI-written.** One comes from `claude-sonnet-5`
-  asked to answer well; the other from `claude-haiku-4-5-20251001` asked to
-  answer plausibly while slipping in one realistic service flaw. Which reply
-  appears first is a coin flip fixed in advance, so position carries no
-  information.
-- **No real client work and no real customer data.** Nothing here records how
-  any deployed system behaved.
+- **The chats are real public data**: MultiWOZ 2.2, MIT licence, Copyright (c) 2019 Paweł Budzianowski. Each is the opening turns of a real service dialogue, ending on the customer's request.
+- **Both candidate replies are AI-written.** One comes from `claude-sonnet-5` asked to answer well; the other from `claude-haiku-4-5-20251001` asked to answer plausibly while slipping in one realistic service flaw. Which reply appears first is a coin flip fixed in advance, so position carries no information.
+- **No real client work and no real customer data.** Nothing here records how any deployed system behaved.
 
-## Built with my own eval software
+## Built with Eval Studio
 
-The gold set was made in **Eval Studio**, a local grading workbench I built
-for this project: blind side-by-side grading with reason tags, a blind
-re-grading pass that measures my own consistency, and a teaching layer that
-explains each phase in place.
+The picks were made in **Eval Studio**, a local grading workbench I built for this project: blind side-by-side grading with reason tags, a blind re-grading pass that measures my own consistency, and a teaching layer that explains each phase in place.
 
 ![The grading surface: six-phase board on top, the current phase's teaching in place, one real matchup below](docs/screenshots/eval-studio-grading.png)
-*The grading surface, captured mid-run on a fresh instance. The six-phase
-board tracks where the run is, and model names are hidden so a ruling cannot
-lean on them.*
+*The grading screen, captured mid-run on a fresh instance. Model names are hidden so a pick cannot lean on them.*
 
 ![The blind retest's results screen: 80% agreement, 55–93% interval, kappa 0.526](docs/screenshots/eval-studio-retest-results.png)
-*This project's actual retest result: 80% self-agreement (12 of 15 matched),
-55–93% Wilson interval, κ 0.526. The same one-person ceiling this README
-states in prose.*
+*The real self-check result: 80% match (12 of 15), with the same one-person ceiling this README states in words.*
 
 ![A phase page: dated debugging history, cause-then-fix](docs/screenshots/eval-studio-phase-page.png)
-*Each phase page records what ran and what went wrong: dated, cause-then-fix,
-including the two live API failures fixed test-first during the judge runs.*
+*Each phase page records what ran and what broke: dated, cause then fix, including the two live API failures fixed test-first during the judge runs.*
 
 ![The Learn hub: six phases with live status for completed ones](docs/screenshots/eval-studio-learn-hub.png)
-*The six phases as they actually ran. A number appears only once its phase
-has genuinely produced it.*
-
-## Why measure a judge at all
-
-Human rulings are the expensive part of evaluation: one published estimate
-puts expert labels at $8 per sample ([Eugene Yan's survey of LLM
-evaluators](https://eugeneyan.com/writing/llm-evaluators/), citing the
-Shepherd paper), and both [OpenAI's
-guidance](https://developers.openai.com/api/docs/guides/evaluation-best-practices)
-("validate agreement against your human labels before optimizing for cost or
-latency") and the MT-Bench study ([Zheng et al.
-2023](https://arxiv.org/abs/2306.05685): strong AI judges reach over 80%
-agreement with human preferences, the level humans reach with each other)
-make measuring that agreement the first step. This repository practices that
-step, with uncertainty stated honestly at a small sample size, and claims no
-cost saving of its own.
+*The six phases as they really ran. A number appears only once its phase has genuinely produced it.*
 
 ## What the numbers can and cannot support
 
-- **Every ruling comes from one person.** That one judgment is the gold
-  standard here, so every number inherits their consistency and their blind
-  spots.
-- **Ruling twice as a self-test: 80% over 15 scenarios ruled twice (95% Wilson range 55%–93% on the raw share; chance-corrected agreement, Cohen's κ, 0.526, given no strength label because such labels are not stable at n=15)**, with
-  the two passes 2–4 days apart, a range because individual rulings carry no
-  timestamps. The retest showed none of the first pass. After each retest
-  ruling, one question asked whether the annotator remembered the earlier
-  ruling; answers were recorded once, at each scenario's first ruling, and the
-  question itself can influence later rulings, a side effect disclosed here,
-  not designed away. Counting only the 15 scenarios whose answer was no or
-  unsure, agreement was 80% (the restriction is not selective here: every
-  answer was no). The 15 retest scenarios are the fixed seeded draw committed
-  in `data/retest_items.json` before the retest ran; agreement means an exact
-  match on the three-way verdict (A better / B better / tie). A self-report
-  cannot rule memory out, so 80% stays an upper bound on this one person's
-  consistency.
-- **The held-out set was fixed before any teaching existed**, 15 scenarios
-  held out of 60, and the calibrated prompt is built only from the other 45.
-- **Known biases are not controlled.** An AI judging AI text can favor text
-  that resembles its own, and judges are sensitive to answer order. Order is
-  randomised here, which handles position but not self-preference.
-- The comparison is one run on 15 held-out scenarios. Read the 95% intervals
-  in `metrics/results.md` before treating any gap as real.
+- **Every ruling comes from one person.** That one judgment is the gold standard here, so every number inherits their consistency and their blind spots.
+- **The self-check: 80% over 15 scenarios ruled twice** (95% Wilson range 55%–93% on the raw share; chance-corrected agreement, Cohen's κ, 0.526, given no strength label because such labels are not stable at n=15), with the two passes 2–4 days apart, a range because individual rulings carry no timestamps. The retest showed none of the first pass. After each retest ruling, one question asked whether the annotator remembered the earlier ruling; answers were recorded once, at each scenario's first ruling, and the question itself can influence later rulings, a side effect disclosed here, not designed away. Counting only the 15 scenarios whose answer was no or unsure, agreement was 80% (the restriction is not selective here: every answer was no). The 15 retest scenarios are the fixed seeded draw committed in `data/retest_items.json` before the retest ran; agreement means an exact match on the three-way verdict (A better / B better / tie). A self-report cannot rule memory out, so 80% stays an upper bound on this one person's consistency.
+- **Known biases are not controlled.** An AI judging AI text can favor text that resembles its own, and judges are sensitive to answer order. Order is randomised here, which handles position but not self-preference.
+- The comparison is one run on 15 held-out scenarios. Read the 95% intervals in `metrics/results.md` before treating any gap as real.
 
 ## Layout
 
-- `data/gold_set.jsonl`: scenarios, the annotator's ruling, split, and reason tags
+- `data/gold_set.jsonl`: scenarios, the person's ruling, split, and reason tags
 - `data/predictions.jsonl`: every prediction from both judges
 - `data/retest_items.json`: the fixed seeded draw of 15 scenarios ruled twice
 - `data/retest.jsonl`: both rulings and the recall-probe answer for each retest scenario
