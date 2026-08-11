@@ -1,5 +1,12 @@
 # Pre-registration — held-out evaluation (committed before any labeling)
 
+> **Correction note (2026-08-11).** The timing claims in this file overstate what the
+> git record supports: the file's first commit is 2026-08-04 (`3c42c77`), and the
+> project log records 45 of 60 first-pass gradings already done on 2026-08-03. What the
+> record does support: the held-out split assignment was committed before calibration
+> existed, and this analysis plan was committed before the judge runs (2026-08-06).
+> The original text below is unchanged.
+
 Committed 2026-08-04, before labeling session 1. Governs the real run; the
 FROZEN acceptance checklist's strict-greater rule is the PASS bar —
 significance is honesty framing, never the bar.
