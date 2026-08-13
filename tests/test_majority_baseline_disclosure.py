@@ -15,9 +15,12 @@ MAJ = RESULTS["heldout"]["majority_label_baseline"]
 
 
 def test_readme_discloses_majority_baseline():
+    # Plain-language phrasing (operator 2026-08-13): the README describes the
+    # majority-class baseline as a do-nothing judge that always answers
+    # "A better"; the pin follows that phrasing.
     readme = (REPO / "README.md").read_text(encoding="utf-8")
-    m = re.search(r"majority[- ]class baseline[^.]*?(\d+)%", readme, re.IGNORECASE)
-    assert m, "README never discloses the majority-class baseline"
+    m = re.search(r"always answers \"A better\"[^.]*?(\d+)%", readme, re.IGNORECASE)
+    assert m, "README never discloses the always-'A better' (majority-class) baseline"
     assert int(m.group(1)) == round(MAJ["accuracy"] * 100)
     # Clause pin, not a bare \btie — README independently contains the
     # unrelated "(A better / B better / tie)", which a bare pin matches.

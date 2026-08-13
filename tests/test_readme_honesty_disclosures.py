@@ -8,10 +8,12 @@ from pathlib import Path
 REPO = Path(__file__).parents[1]
 
 DISCLOSURES = [
-    "constructed",                                  # constructed-demo framing
-    "No real client work and no real customer data",
+    # "A demonstration built for..." replaced "constructed" and the
+    # no-real-client-data line was removed, both on operator order 2026-08-13
+    "A demonstration built for this measurement",
     "Every ruling comes from one person",           # one-person ceiling
-    "Known biases are not controlled",              # self-preference caveat
+    "Known biases are not controlled",               # self-preference caveat
+    "the same model that wrote reply one",           # judge = reply-one author
     "upper bound on this one person's consistency",
     "eugeneyan.com/writing/llm-evaluators",         # $8 estimate source
     "citing the Shepherd paper",                    # $8 sub-attribution
