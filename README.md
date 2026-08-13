@@ -2,6 +2,10 @@
 
 ## Can you trust an AI to grade another AI? This repo checks.
 
+- **The idea:** an AI judge is only a trustworthy stand-in for a human after you measure how well it matches that human.
+- **This repo is that measurement, done honestly.** Every human ruling and every judge answer is saved here. Two commands re-run all the math on your machine. Automated checks fail if the key numbers or honesty statements in this file drift from the saved data.
+- **The unflattering result ships anyway:** on the 15 test chats, a do-nothing judge that gives the same answer every time matches the human as often as the taught judge. Both land on 53%.
+
 [![tests](https://github.com/Mike-E-Log/business-scenario-judge/actions/workflows/tests.yml/badge.svg)](https://github.com/Mike-E-Log/business-scenario-judge/actions/workflows/tests.yml)
 [![leak-scan](https://github.com/Mike-E-Log/business-scenario-judge/actions/workflows/leak-scan.yml/badge.svg)](https://github.com/Mike-E-Log/business-scenario-judge/actions/workflows/leak-scan.yml)
 [![License](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
@@ -11,13 +15,9 @@
   <sub>Built by <a href="https://github.com/Mike-E-Log"><b>Mike Ilog</b></a> · AI Engineer · LLM &amp; agent evaluation &nbsp;·&nbsp; <a href="https://www.linkedin.com/in/mikeilog/">LinkedIn</a></sub>
 </p>
 
-- **The idea:** an AI judge is only a trustworthy stand-in for a human after you measure how well it matches that human.
-- **This repo is that measurement, done honestly.** Every human ruling and every judge answer is saved here. Two commands re-run all the math on your machine. Automated checks fail if the key numbers or honesty statements in this file drift from the saved data.
-- **The unflattering result ships anyway:** on the 15 test chats, a do-nothing judge that gives the same answer every time matches the human as often as the taught judge. Both land on 53%.
-
 ## Contents
 
-- [The whole eval, on one page](#the-whole-eval-on-one-page)
+- [The whole eval, in one diagram](#the-whole-eval-in-one-diagram)
 - [The problem](#the-problem)
 - [What this is, exactly](#what-this-is-exactly)
 - [Experiment 1: the judge calibration](#experiment-1-the-judge-calibration)
@@ -26,9 +26,10 @@
 - [Check the numbers yourself](#check-the-numbers-yourself)
 - [Built with Eval Studio](#built-with-eval-studio)
 - [Limitations](#limitations)
-- [Layout](#layout)
+- [Repository layout](#repository-layout)
+- [License](#license)
 
-## The whole eval, on one page
+## The whole eval, in one diagram
 
 ```mermaid
 flowchart TD
@@ -45,11 +46,19 @@ flowchart TD
     R --> J
 ```
 
+<p align="right">(<a href="#contents">↑ back to top</a>)</p>
+
+---
+
 ## The problem
 
 - **Hand-checking is costly.** One published estimate: about $8 for each AI answer an expert grades ([Eugene Yan's survey of LLM evaluators](https://eugeneyan.com/writing/llm-evaluators/), citing the Shepherd paper).
 - **So companies ask a second AI to do the grading.** That opens a new question: is the AI grader any good?
 - **The standard first step is to measure the grader against a human, and that measurement is this whole repo.** [OpenAI's guidance](https://developers.openai.com/api/docs/guides/evaluation-best-practices) says to "validate agreement against your human labels before optimizing for cost or latency". The MT-Bench study ([Zheng et al. 2023](https://arxiv.org/abs/2306.05685)) found strong AI judges reach over 80% agreement with human preferences, the level humans reach with each other. No cost saving is claimed here.
+
+<p align="right">(<a href="#contents">↑ back to top</a>)</p>
+
+---
 
 ## What this is, exactly
 
@@ -62,6 +71,10 @@ A demonstration built for this measurement, not a system that ever served real c
   - Reply two: written by `claude-haiku-4-5-20251001`, asked to answer plausibly while slipping in one realistic service flaw.
   - Which reply appears first is a coin flip fixed in advance, so position carries no information.
   - Both judges, taught and untaught, run on `claude-sonnet-5`: the same model that wrote reply one. Why that matters is in [Limitations](#limitations).
+
+<p align="right">(<a href="#contents">↑ back to top</a>)</p>
+
+---
 
 ## Experiment 1: the judge calibration
 
@@ -77,6 +90,10 @@ A demonstration built for this measurement, not a system that ever served real c
 - **A harsher comparison:** a do-nothing judge that ignores the chat and always answers "A better" (the person's most common ruling in the teaching half) also lands on 53%, so the taught judge only ties it (recorded as `majority_label_baseline` in `metrics/results.json`). The matching number is no accident: "A better" is the correct answer on 8 of these 15 chats (53%), and a judge showing no real skill drifts toward exactly that base rate.
 - **And the tie itself is fragile:** the blind self-check re-ruled 5 of these 15 test chats and flipped one (`mwz_SNG0360`). Under those second-pass rulings the taught judge scores 60% and the do-nothing judge about 47%, so one changed ruling ends the tie. Numbers this small settle nothing, in either direction.
 - **Shown, not hidden:** the tie sits in this file's opening lines, and an automated check compares this text against the data files, so the admission cannot quietly drift or disappear.
+
+<p align="right">(<a href="#contents">↑ back to top</a>)</p>
+
+---
 
 ## Experiment 2: the self-check (grading twice)
 
@@ -96,6 +113,10 @@ One person is the entire gold standard here, so the repo measures that person to
   - Saying no cannot prove memory played no part, so 80% stays an upper bound on this one person's consistency.
 - **The sample was locked in advance.** The 15 re-ruled chats came from a fixed random draw saved in `data/retest_items.json` before the re-grading began, so they could not be hand-picked afterward. A match means the exact same verdict: A better, B better, or tie.
 
+<p align="right">(<a href="#contents">↑ back to top</a>)</p>
+
+---
+
 ## Check the numbers yourself
 
 A few minutes, no AI account needed:
@@ -107,6 +128,10 @@ python scoring/retest_stats.py --retest data/retest.jsonl --items data/retest_it
 ```
 
 Every judge answer is already saved in `data/predictions.jsonl`, so the commands just redo the arithmetic. No AI is called.
+
+<p align="right">(<a href="#contents">↑ back to top</a>)</p>
+
+---
 
 ## Built with Eval Studio
 
@@ -128,6 +153,10 @@ The rulings were made in **Eval Studio**, a local grading app I built for this p
 ![The Learn hub: six phases with live status for completed ones](docs/screenshots/eval-studio-learn-hub.png)
 *The six phases as they really ran. A number appears only once its phase has genuinely produced it.*
 
+<p align="right">(<a href="#contents">↑ back to top</a>)</p>
+
+---
+
 ## Limitations
 
 - **Every ruling comes from one person.** That one judgment is the gold standard, so every number inherits their consistency and their blind spots.
@@ -139,7 +168,11 @@ The rulings were made in **Eval Studio**, a local grading app I built for this p
 - **Memory in the self-check.** The 80% self-agreement is a ceiling, not a precise measure (see the memory question above).
 - **One run.** One dataset, one model family, no repeats.
 
-## Layout
+<p align="right">(<a href="#contents">↑ back to top</a>)</p>
+
+---
+
+## Repository layout
 
 - `data/gold_set.jsonl`: the 60 chats, the person's ruling, the teach/test split, and reason tags
 - `data/predictions.jsonl`: every ruling from both judges
@@ -151,3 +184,11 @@ The rulings were made in **Eval Studio**, a local grading app I built for this p
 - `scoring/score.py`, `scoring/retest_stats.py`: the recompute-only scripts
 - `PREREGISTRATION.md`: the pre-run plan, with its dated correction note
 - `THIRD_PARTY.md`: source-data licences and citations
+
+<p align="right">(<a href="#contents">↑ back to top</a>)</p>
+
+---
+
+## License
+
+Released under the MIT license (see [LICENSE](LICENSE)).
