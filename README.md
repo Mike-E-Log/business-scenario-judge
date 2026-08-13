@@ -107,6 +107,9 @@ A demonstration built for this measurement, not a system that ever served real c
 - **And the tie itself is fragile:** the blind self-check re-ruled 5 of these 15 test chats and flipped one (`mwz_SNG0360`). Under those second-pass rulings the calibrated judge scores 60% and the do-nothing judge about 47%, so one changed ruling ends the tie. Numbers this small settle nothing, in either direction.
 - **Shown, not hidden:** the tie sits in this file's opening lines, and an automated check compares this text against the data files, so the admission cannot quietly drift or disappear.
 
+![Judge results screen: three tiles, calibrated 53 percent with range 27 to 80, uncalibrated 40 percent with range 13 to 67, do-nothing judge 53 percent](docs/screenshots/eval-studio-judge-results.png)
+*The app's Judge results screen, rendered from the same committed numbers this section reports.*
+
 <p align="right">(<a href="#contents">↑ back to top</a>)</p>
 
 ---
@@ -129,6 +132,9 @@ One person is the entire gold standard here, so the repo measures that person to
   - Saying no cannot prove memory played no part, so 80% stays an upper bound on this one person's consistency.
 - **The sample was locked in advance.** The 15 re-ruled chats came from a fixed random draw saved in `data/retest_items.json` before the re-grading began, so they could not be hand-picked afterward. A match means the exact same verdict: A better, B better, or tie.
 
+![Blind retest results screen: 80 percent agreement with yourself, 55 to 93 percent interval, kappa 0.526](docs/screenshots/eval-studio-retest-results.png)
+*The self-check as the app reported it: 12 of 15 matched, the wide range stated, the chance-corrected score beside it.*
+
 <p align="right">(<a href="#contents">↑ back to top</a>)</p>
 
 ---
@@ -139,19 +145,9 @@ The rulings were made in **Eval Studio**, a local grading app I built for this p
 
 - **Blind side-by-side (pairwise) grading:** the two replies appear with model names hidden, and the grader picks **A better, B better, or tie**, plus reason tags.
 - **A blind re-grading pass** measures the grader's own consistency (Experiment 2 above), with every first-pass verdict hidden.
-- **A teaching layer** explains each phase of the eval in place.
 
-![The grading surface: six-phase board on top, the current phase's teaching in place, one real matchup below](docs/screenshots/eval-studio-grading.png)
-*The grading screen, captured mid-run on a fresh instance. Model names are hidden so a pick cannot lean on them.*
-
-![The blind retest's results screen: 80% agreement, 55–93% interval, kappa 0.526](docs/screenshots/eval-studio-retest-results.png)
-*The real self-check result: 80% match (12 of 15), with the same one-person ceiling this README states in words.*
-
-![A phase page: dated debugging history, cause-then-fix](docs/screenshots/eval-studio-phase-page.png)
-*Each phase page records what ran and what broke: dated, cause then fix, including the two live API failures fixed test-first during the judge runs.*
-
-![The Learn hub: six phases with live status for completed ones](docs/screenshots/eval-studio-learn-hub.png)
-*The six phases as they really ran. A number appears only once its phase has genuinely produced it.*
+![The grading screen mid-run: six-phase progress board on top, one real matchup below, model names hidden](docs/screenshots/eval-studio-grading.png)
+*The grading screen, captured mid-run. Model names are hidden so a pick cannot lean on them.*
 
 <p align="right">(<a href="#contents">↑ back to top</a>)</p>
 
