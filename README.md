@@ -12,7 +12,7 @@
 </p>
 
 - **The idea:** an AI judge is only a trustworthy stand-in for a human after you measure how well it matches that human.
-- **This repo is that measurement, done honestly.** Every human ruling and every judge answer is saved here. Two commands re-run all the math on your machine. Automated checks fail if the numbers or honesty statements in this file stop matching the saved data.
+- **This repo is that measurement, done honestly.** Every human ruling and every judge answer is saved here. Two commands re-run all the math on your machine. Automated checks fail if the key numbers or honesty statements in this file drift from the saved data.
 - **The unflattering result ships anyway:** on the 15 test chats, a do-nothing judge that gives the same answer every time matches the human as often as the taught judge. Both land on 53%.
 
 ## Contents
@@ -32,13 +32,13 @@
 
 ```mermaid
 flowchart TD
-    A["60 real service chats<br>MultiWOZ 2.2, public data"] --> B["2 AI replies written for each chat:<br>one asked to answer well,<br>one planted with a realistic flaw,<br>shown in coin-flipped order"]
-    B --> C["One person grades each pair blind:<br>A better / B better / tie<br>60 rulings, with reason tags"]
+    A["60 service chats<br>from the MultiWOZ 2.2 research corpus"] --> B["2 AI replies written for each chat:<br>one asked to answer well,<br>one planted with a realistic flaw,<br>shown in coin-flipped order"]
+    B --> C["One person grades each pair blind:<br>A better / B better / tie<br>60 rulings"]
     C --> D["Fixed split:<br>45 teaching chats, 15 test chats"]
     C --> R["Self-check:<br>15 chats re-graded blind, days later<br>80% matched the first pass"]
-    D --> E["Taught judge:<br>prompt carries the 45 teaching rulings"]
+    D --> E["Taught judge:<br>prompt carries 12 of the 45 teaching rulings<br>plus tag patterns from all 45"]
     D --> F["Untaught judge:<br>same model, no examples"]
-    E --> G["Both judges rule the 15 test chats"]
+    E --> G["Both judges rule every chat,<br>scored on the 15 test chats only"]
     F --> G
     G --> H["Score each judge against the person:<br>53% taught, 40% untaught,<br>and a do-nothing judge also lands on 53%"]
     H --> J["Honest public report:<br>wide uncertainty stated, the tie disclosed"]
@@ -53,8 +53,8 @@ flowchart TD
 
 ## What happened here
 
-1. One person read real service chats and picked between two AI answers, 60 times: A better, B better, or tie (a "pairwise" comparison).
-2. An AI judge was taught (the "calibrated" judge) using 45 of those rulings as examples.
+1. One person read each chat and picked between two AI answers, 60 times: A better, B better, or tie (a "pairwise" comparison).
+2. An AI judge was taught (the "calibrated" judge) from the 45 teaching rulings: its prompt carries 12 of them as worked examples, plus the person's reason-tag patterns counted across all 45.
 3. Both the taught judge and an untaught judge then ruled the other 15 chats, which were held out of the teaching step. Which chat belongs to which group is recorded in `data/gold_set.jsonl`, so anyone can check the split.
 4. The plan was written before the judges ran: [PREREGISTRATION.md](PREREGISTRATION.md). Preregistration is the research habit of committing to a plan before seeing the results, so the goalposts cannot move afterward. That file carries a dated correction note where its own timing wording claimed more than the git record can prove.
 
@@ -81,7 +81,7 @@ Every judge answer is already saved in `data/predictions.jsonl`, so the commands
 
 A demonstration built for this measurement, not a system that ever served real customers.
 
-- **The chats are real public data:** MultiWOZ 2.2 (MIT licence, Copyright (c) 2019 Paweł Budzianowski). Each chat is the opening back-and-forth of a real service conversation, cut off right where the customer asks for something.
+- **The chats are real public research data:** MultiWOZ 2.2 (MIT licence, Copyright (c) 2019 Paweł Budzianowski), a "Wizard-of-Oz" corpus: people role-playing customer and service agent for research, not logs from a live business (sources and citations: [THIRD_PARTY.md](THIRD_PARTY.md)). Each chat is the opening back-and-forth of one of those conversations, cut off right where the customer asks for something.
 - **The pairwise comparison in action:** under each cut-off chat sit two candidate replies, side by side. The grader, human or AI, reads the chat and picks which reply serves the customer better: A better, B better, or tie.
 - **Both candidate replies are AI-written, and the judges are AI too:**
   - Reply one: written by `claude-sonnet-5`, asked to answer well.
@@ -119,7 +119,7 @@ One person is the entire gold standard here, so the repo measures that person to
 |---|---|---|
 | Raw match | 80% | 12 of the 15 second rulings matched the first |
 | 95% Wilson range | 55%–93% | with only 15 chats, the true consistency could plausibly sit anywhere from 55% to 93%; 80% is the middle of a wide range, not a precise number |
-| Chance-corrected agreement (Cohen's κ) | 0.526 | how much better the match is than lucky guessing: 0 means pure luck, 1 means perfect; 0.526 is moderate, and 15 chats is too few to label it more firmly |
+| Chance-corrected agreement (Cohen's κ) | 0.526 | how much better the match is than lucky guessing: 0 means pure luck, 1 means perfect; 15 chats is too few to attach a firm strength label |
 
 - **The memory question.** After re-ruling each chat, the app asked: do you remember your first ruling? One answer per chat is stored in `data/retest.jsonl`. Every answer was no.
   - Keeping only the chats answered no or unsure changes nothing (the restriction is not selective here: every answer was no).
@@ -142,7 +142,9 @@ One person is the entire gold standard here, so the repo measures that person to
 - `data/predictions.jsonl`: every ruling from both judges
 - `data/retest_items.json`: the fixed draw of 15 chats ruled twice
 - `data/retest.jsonl`: both rulings and the memory answer for each re-ruled chat
-- `judge/baseline_prompt.txt`, `judge/calibrated_prompt.txt`: the exact prompts (the calibrated prompt embeds the person's verbatim written notes for its example rulings)
+- `judge/baseline_prompt.txt`, `judge/calibrated_prompt.txt`: the exact prompts (the calibrated prompt embeds the person's verbatim written notes for its 12 example rulings)
 - `metrics/results.json`, `metrics/results.md`: the recomputed numbers
+- `metrics/retest.json`: the self-check's committed recompute output
 - `scoring/score.py`, `scoring/retest_stats.py`: the recompute-only scripts
 - `PREREGISTRATION.md`: the pre-run plan, with its dated correction note
+- `THIRD_PARTY.md`: source-data licences and citations
