@@ -21,6 +21,26 @@ python scoring/retest_stats.py --retest data/retest.jsonl --items data/retest_it
 
 Reported difference is on **accuracy**: 0.400 to 0.533.
 
+### Confusion counts (held-out, n=15)
+
+Rows are the annotator's ruling; columns are the judge's ruling. Raw counts only: at n=15, per-class rates (precision/recall/F1) are not stable, so none are reported (`confusion` in `results.json`; the held-out split contains no tie rulings, so the tie row is zero).
+
+Calibrated judge:
+
+| annotator ruled \ judge said | A better | B better | tie |
+|---|---|---|---|
+| A better | 5 | 3 | 0 |
+| B better | 4 | 3 | 0 |
+| tie | 0 | 0 | 0 |
+
+Baseline judge:
+
+| annotator ruled \ judge said | A better | B better | tie |
+|---|---|---|---|
+| A better | 5 | 2 | 1 |
+| B better | 6 | 1 | 0 |
+| tie | 0 | 0 | 0 |
+
 Annotator self-agreement: 80% over 15 scenarios ruled twice (95% Wilson interval 55%–93% on the raw proportion; chance-corrected Cohen's κ 0.526, reported without a strength label because band labels are not stable at n=15). Restricted to the 15 scenarios whose probe answer was no/unsure, agreement was 80%. Nothing here
 can be more reliable than that number. It is the ceiling on what one person's
 gold set can show.

@@ -105,6 +105,11 @@ def compute_metrics(gold, preds):
     else:
         maj, maj_acc = None, None
     out["heldout"]["majority_label_baseline"] = {"label": maj, "accuracy": maj_acc}
+    for name, yp in (("baseline", yp_b), ("calibrated", yp_c)):
+        conf = {f"{t}|{p}": 0 for t in LABELS for p in LABELS}
+        for t, p in zip(yt, yp):
+            conf[f"{t}|{p}"] += 1
+        out["heldout"][name]["confusion"] = conf
     return out
 
 
