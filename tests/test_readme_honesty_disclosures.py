@@ -23,6 +23,10 @@ DISCLOSURES = [
     "MultiWOZ 2.2",
     "PREREGISTRATION.md",                           # pre-run plan + its correction note
     "one changed ruling ends the tie",              # tie fragility (audit 2026-08-13)
+    "26 of 59",                                     # planted-flaw axis check (wording
+    # pin only: the number's source data is deliberately not in this repo,
+    # and the sentence must keep saying so)
+    "cannot be rechecked from the files here",
 ]
 
 
