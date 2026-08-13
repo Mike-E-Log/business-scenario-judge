@@ -19,11 +19,11 @@
 
 - [The whole eval, on one page](#the-whole-eval-on-one-page)
 - [The problem](#the-problem)
+- [What this is, exactly](#what-this-is-exactly)
 - [Experiment 1: the judge calibration](#experiment-1-the-judge-calibration)
   - [The honest result](#the-honest-result)
 - [Experiment 2: the self-check (grading twice)](#experiment-2-the-self-check-grading-twice)
 - [Check the numbers yourself](#check-the-numbers-yourself)
-- [What this is, exactly](#what-this-is-exactly)
 - [Built with Eval Studio](#built-with-eval-studio)
 - [Limitations](#limitations)
 - [Layout](#layout)
@@ -50,6 +50,18 @@ flowchart TD
 - **Hand-checking is costly.** One published estimate: about $8 for each AI answer an expert grades ([Eugene Yan's survey of LLM evaluators](https://eugeneyan.com/writing/llm-evaluators/), citing the Shepherd paper).
 - **So companies ask a second AI to do the grading.** That opens a new question: is the AI grader any good?
 - **The standard first step is to measure the grader against a human, and that measurement is this whole repo.** [OpenAI's guidance](https://developers.openai.com/api/docs/guides/evaluation-best-practices) says to "validate agreement against your human labels before optimizing for cost or latency". The MT-Bench study ([Zheng et al. 2023](https://arxiv.org/abs/2306.05685)) found strong AI judges reach over 80% agreement with human preferences, the level humans reach with each other. No cost saving is claimed here.
+
+## What this is, exactly
+
+A demonstration built for this measurement, not a system that ever served real customers.
+
+- **The chats are real public research data:** MultiWOZ 2.2 (MIT licence, Copyright (c) 2019 Paweł Budzianowski), a "Wizard-of-Oz" corpus: people role-playing customer and service agent for research, not logs from a live business (sources and citations: [THIRD_PARTY.md](THIRD_PARTY.md)). Each chat is the opening back-and-forth of one of those conversations, cut off right where the customer asks for something.
+- **The pairwise comparison in action:** under each cut-off chat sit two candidate replies, side by side. The grader, human or AI, reads the chat and picks which reply serves the customer better: A better, B better, or tie.
+- **Both candidate replies are AI-written, and the judges are AI too:**
+  - Reply one: written by `claude-sonnet-5`, asked to answer well.
+  - Reply two: written by `claude-haiku-4-5-20251001`, asked to answer plausibly while slipping in one realistic service flaw.
+  - Which reply appears first is a coin flip fixed in advance, so position carries no information.
+  - Both judges, taught and untaught, run on `claude-sonnet-5`: the same model that wrote reply one. Why that matters is in [Limitations](#limitations).
 
 ## Experiment 1: the judge calibration
 
@@ -95,18 +107,6 @@ python scoring/retest_stats.py --retest data/retest.jsonl --items data/retest_it
 ```
 
 Every judge answer is already saved in `data/predictions.jsonl`, so the commands just redo the arithmetic. No AI is called.
-
-## What this is, exactly
-
-A demonstration built for this measurement, not a system that ever served real customers.
-
-- **The chats are real public research data:** MultiWOZ 2.2 (MIT licence, Copyright (c) 2019 Paweł Budzianowski), a "Wizard-of-Oz" corpus: people role-playing customer and service agent for research, not logs from a live business (sources and citations: [THIRD_PARTY.md](THIRD_PARTY.md)). Each chat is the opening back-and-forth of one of those conversations, cut off right where the customer asks for something.
-- **The pairwise comparison in action:** under each cut-off chat sit two candidate replies, side by side. The grader, human or AI, reads the chat and picks which reply serves the customer better: A better, B better, or tie.
-- **Both candidate replies are AI-written, and the judges are AI too:**
-  - Reply one: written by `claude-sonnet-5`, asked to answer well.
-  - Reply two: written by `claude-haiku-4-5-20251001`, asked to answer plausibly while slipping in one realistic service flaw.
-  - Which reply appears first is a coin flip fixed in advance, so position carries no information.
-  - Both judges, taught and untaught, run on `claude-sonnet-5`: the same model that wrote reply one. Why that matters is in [Limitations](#limitations).
 
 ## Built with Eval Studio
 
