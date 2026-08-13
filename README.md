@@ -19,12 +19,12 @@
 
 - [The whole eval, on one page](#the-whole-eval-on-one-page)
 - [The problem](#the-problem)
-- [What happened here](#what-happened-here)
-- [The honest result](#the-honest-result)
+- [Experiment 1: the judge calibration](#experiment-1-the-judge-calibration)
+  - [The honest result](#the-honest-result)
+- [Experiment 2: the self-check (grading twice)](#experiment-2-the-self-check-grading-twice)
 - [Check the numbers yourself](#check-the-numbers-yourself)
 - [What this is, exactly](#what-this-is-exactly)
 - [Built with Eval Studio](#built-with-eval-studio)
-- [The self-check: grading twice](#the-self-check-grading-twice)
 - [Limitations](#limitations)
 - [Layout](#layout)
 
@@ -51,20 +51,38 @@ flowchart TD
 - **So companies ask a second AI to do the grading.** That opens a new question: is the AI grader any good?
 - **The standard first step is to measure the grader against a human, and that measurement is this whole repo.** [OpenAI's guidance](https://developers.openai.com/api/docs/guides/evaluation-best-practices) says to "validate agreement against your human labels before optimizing for cost or latency". The MT-Bench study ([Zheng et al. 2023](https://arxiv.org/abs/2306.05685)) found strong AI judges reach over 80% agreement with human preferences, the level humans reach with each other. No cost saving is claimed here.
 
-## What happened here
+## Experiment 1: the judge calibration
 
 1. One person read each chat and picked between two AI answers, 60 times: A better, B better, or tie (a "pairwise" comparison).
 2. An AI judge was taught (the "calibrated" judge) from the 45 teaching rulings: its prompt carries 12 of them as worked examples, plus the person's reason-tag patterns counted across all 45.
 3. Both the taught judge and an untaught judge then ruled the other 15 chats, which were held out of the teaching step. Which chat belongs to which group is recorded in `data/gold_set.jsonl`, so anyone can check the split.
 4. The plan was written before the judges ran: [PREREGISTRATION.md](PREREGISTRATION.md). Preregistration is the research habit of committing to a plan before seeing the results, so the goalposts cannot move afterward. That file carries a dated correction note where its own timing wording claimed more than the git record can prove.
 
-## The honest result
+### The honest result
 
 - **The score: 53% against 40%.** The taught judge agreed with the person on 8 of the 15 test chats (53%). The untaught judge agreed on 6 of 15 (40%).
 - **Why that is not a win yet:** 15 chats is a small test, so luck alone can move these numbers a lot. Statistically, the taught judge's true skill could sit anywhere from about 27% to 80%, and the untaught judge's anywhere from about 13% to 67% (`metrics/results.json`). The two ranges overlap heavily, so this one run cannot show the teaching truly helped.
 - **A harsher comparison:** a do-nothing judge that ignores the chat and always answers "A better" (the person's most common ruling in the teaching half) also lands on 53%, so the taught judge only ties it (recorded as `majority_label_baseline` in `metrics/results.json`). The matching number is no accident: "A better" is the correct answer on 8 of these 15 chats (53%), and a judge showing no real skill drifts toward exactly that base rate.
 - **And the tie itself is fragile:** the blind self-check re-ruled 5 of these 15 test chats and flipped one (`mwz_SNG0360`). Under those second-pass rulings the taught judge scores 60% and the do-nothing judge about 47%, so one changed ruling ends the tie. Numbers this small settle nothing, in either direction.
 - **Shown, not hidden:** the tie sits in this file's opening lines, and an automated check compares this text against the data files, so the admission cannot quietly drift or disappear.
+
+## Experiment 2: the self-check (grading twice)
+
+One person is the entire gold standard here, so the repo measures that person too.
+
+- **The self-check: 80% over 15 scenarios ruled twice** (12 of 15 matched). The same 15 chats were re-ruled 2–4 days later (a range because individual rulings carry no timestamps), with every first-pass verdict hidden.
+
+| Statistic | Value | Plain meaning |
+|---|---|---|
+| Raw match | 80% | 12 of the 15 second rulings matched the first |
+| 95% Wilson range | 55%–93% | with only 15 chats, the true consistency could plausibly sit anywhere from 55% to 93%; 80% is the middle of a wide range, not a precise number |
+| Chance-corrected agreement (Cohen's κ) | 0.526 | how much better the match is than lucky guessing: 0 means pure luck, 1 means perfect; 15 chats is too few to attach a firm strength label |
+
+- **The memory question.** After re-ruling each chat, the app asked: do you remember your first ruling? One answer per chat is stored in `data/retest.jsonl`. Every answer was no.
+  - Keeping only the chats answered no or unsure changes nothing (the restriction is not selective here: every answer was no).
+  - Being asked about memory can itself nudge later rulings; that side effect is disclosed rather than designed away.
+  - Saying no cannot prove memory played no part, so 80% stays an upper bound on this one person's consistency.
+- **The sample was locked in advance.** The 15 re-ruled chats came from a fixed random draw saved in `data/retest_items.json` before the re-grading began, so they could not be hand-picked afterward. A match means the exact same verdict: A better, B better, or tie.
 
 ## Check the numbers yourself
 
@@ -109,24 +127,6 @@ The rulings were made in **Eval Studio**, a local grading app I built for this p
 
 ![The Learn hub: six phases with live status for completed ones](docs/screenshots/eval-studio-learn-hub.png)
 *The six phases as they really ran. A number appears only once its phase has genuinely produced it.*
-
-## The self-check: grading twice
-
-One person is the entire gold standard here, so the repo measures that person too.
-
-- **The self-check: 80% over 15 scenarios ruled twice** (12 of 15 matched). The same 15 chats were re-ruled 2–4 days later (a range because individual rulings carry no timestamps), with every first-pass verdict hidden.
-
-| Statistic | Value | Plain meaning |
-|---|---|---|
-| Raw match | 80% | 12 of the 15 second rulings matched the first |
-| 95% Wilson range | 55%–93% | with only 15 chats, the true consistency could plausibly sit anywhere from 55% to 93%; 80% is the middle of a wide range, not a precise number |
-| Chance-corrected agreement (Cohen's κ) | 0.526 | how much better the match is than lucky guessing: 0 means pure luck, 1 means perfect; 15 chats is too few to attach a firm strength label |
-
-- **The memory question.** After re-ruling each chat, the app asked: do you remember your first ruling? One answer per chat is stored in `data/retest.jsonl`. Every answer was no.
-  - Keeping only the chats answered no or unsure changes nothing (the restriction is not selective here: every answer was no).
-  - Being asked about memory can itself nudge later rulings; that side effect is disclosed rather than designed away.
-  - Saying no cannot prove memory played no part, so 80% stays an upper bound on this one person's consistency.
-- **The sample was locked in advance.** The 15 re-ruled chats came from a fixed random draw saved in `data/retest_items.json` before the re-grading began, so they could not be hand-picked afterward. A match means the exact same verdict: A better, B better, or tie.
 
 ## Limitations
 
