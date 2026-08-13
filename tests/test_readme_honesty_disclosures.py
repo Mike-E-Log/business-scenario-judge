@@ -22,6 +22,7 @@ DISCLOSURES = [
     "arxiv.org/abs/2306.05685",                     # MT-Bench
     "MultiWOZ 2.2",
     "PREREGISTRATION.md",                           # pre-run plan + its correction note
+    "one changed ruling ends the tie",              # tie fragility (audit 2026-08-13)
 ]
 
 
