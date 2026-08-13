@@ -1,4 +1,4 @@
-# business-scenario-judge
+# Business Scenario Judge
 
 ## Can you trust an AI to grade another AI? This repo checks.
 
@@ -9,7 +9,7 @@
 [![tests](https://github.com/Mike-E-Log/business-scenario-judge/actions/workflows/tests.yml/badge.svg)](https://github.com/Mike-E-Log/business-scenario-judge/actions/workflows/tests.yml)
 [![leak-scan](https://github.com/Mike-E-Log/business-scenario-judge/actions/workflows/leak-scan.yml/badge.svg)](https://github.com/Mike-E-Log/business-scenario-judge/actions/workflows/leak-scan.yml)
 [![License](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
-[![Reproduce](https://img.shields.io/badge/reproduce-no%20AI%20account%20needed-2ea44f)](#check-the-numbers-yourself)
+[![Reproduce](https://img.shields.io/badge/reproduce-no%20AI%20account%20needed-2ea44f)](#running-it-yourself)
 
 <p align="center">
   <sub>Built by <a href="https://github.com/Mike-E-Log"><b>Mike Ilog</b></a> · AI Engineer · LLM &amp; agent evaluation &nbsp;·&nbsp; <a href="https://www.linkedin.com/in/mikeilog/">LinkedIn</a></sub>
@@ -18,14 +18,15 @@
 ## Contents
 
 - [The whole eval, in one diagram](#the-whole-eval-in-one-diagram)
+- [What this demonstrates](#what-this-demonstrates)
 - [The problem](#the-problem)
 - [What this is, exactly](#what-this-is-exactly)
 - [Experiment 1: the judge calibration](#experiment-1-the-judge-calibration)
   - [The honest result](#the-honest-result)
 - [Experiment 2: the self-check (grading twice)](#experiment-2-the-self-check-grading-twice)
-- [Check the numbers yourself](#check-the-numbers-yourself)
 - [Built with Eval Studio](#built-with-eval-studio)
 - [Limitations](#limitations)
+- [Running it yourself](#running-it-yourself)
 - [Repository layout](#repository-layout)
 - [License](#license)
 
@@ -45,6 +46,19 @@ flowchart TD
     H --> J["Honest public report: <br>numbers recompute from committed data, <br>uncertainty stated"]
     R --> J
 ```
+
+<p align="right">(<a href="#contents">↑ back to top</a>)</p>
+
+---
+
+## What this demonstrates
+
+An eval done the way the field says it should be done, at honest scale:
+
+- **Measure the judge before trusting it.** The whole repo is the standard first step: score an AI judge against a human before using it as a stand-in.
+- **Honesty enforced by tests, not intentions.** The prose in this file is pinned to the data files; a claim that drifts fails the build.
+- **Reproducible by anyone.** Every ruling and prediction is committed; two commands redo all the math with no AI account.
+- **The measurer gets measured too.** The one human gold standard is itself tested for consistency (Experiment 2).
 
 <p align="right">(<a href="#contents">↑ back to top</a>)</p>
 
@@ -85,6 +99,8 @@ A demonstration built for this measurement, not a system that ever served real c
 
 ### The honest result
 
+**Bottom line: the teaching has not proven itself. The taught judge edges the untaught one on this run, but it only matches a do-nothing judge, and the sample is too small to call either gap real.**
+
 - **The score: 53% against 40%.** The taught judge agreed with the person on 8 of the 15 test chats (53%). The untaught judge agreed on 6 of 15 (40%).
 - **Why that is not a win yet:** 15 chats is a small test, so luck alone can move these numbers a lot. Statistically, the taught judge's true skill could sit anywhere from about 27% to 80%, and the untaught judge's anywhere from about 13% to 67% (`metrics/results.json`). The two ranges overlap heavily, so this one run cannot show the teaching truly helped.
 - **A harsher comparison:** a do-nothing judge that ignores the chat and always answers "A better" (the person's most common ruling in the teaching half) also lands on 53%, so the taught judge only ties it (recorded as `majority_label_baseline` in `metrics/results.json`). The matching number is no accident: "A better" is the correct answer on 8 of these 15 chats (53%), and a judge showing no real skill drifts toward exactly that base rate.
@@ -112,22 +128,6 @@ One person is the entire gold standard here, so the repo measures that person to
   - Being asked about memory can itself nudge later rulings; that side effect is disclosed rather than designed away.
   - Saying no cannot prove memory played no part, so 80% stays an upper bound on this one person's consistency.
 - **The sample was locked in advance.** The 15 re-ruled chats came from a fixed random draw saved in `data/retest_items.json` before the re-grading began, so they could not be hand-picked afterward. A match means the exact same verdict: A better, B better, or tie.
-
-<p align="right">(<a href="#contents">↑ back to top</a>)</p>
-
----
-
-## Check the numbers yourself
-
-A few minutes, no AI account needed:
-
-```
-pip install -r requirements.txt
-python scoring/score.py --gold data/gold_set.jsonl --pred data/predictions.jsonl --out metrics/results.json
-python scoring/retest_stats.py --retest data/retest.jsonl --items data/retest_items.json --out metrics/retest.json
-```
-
-Every judge answer is already saved in `data/predictions.jsonl`, so the commands just redo the arithmetic. No AI is called.
 
 <p align="right">(<a href="#contents">↑ back to top</a>)</p>
 
@@ -167,6 +167,22 @@ The rulings were made in **Eval Studio**, a local grading app I built for this p
 - **Order effects are handled, not erased.** Judges can favor whichever reply appears first. Reply order is randomised, which handles position but not the self-preference above.
 - **Memory in the self-check.** The 80% self-agreement is a ceiling, not a precise measure (see the memory question above).
 - **One run.** One dataset, one model family, no repeats.
+
+<p align="right">(<a href="#contents">↑ back to top</a>)</p>
+
+---
+
+## Running it yourself
+
+A few minutes, no AI account needed:
+
+```
+pip install -r requirements.txt
+python scoring/score.py --gold data/gold_set.jsonl --pred data/predictions.jsonl --out metrics/results.json
+python scoring/retest_stats.py --retest data/retest.jsonl --items data/retest_items.json --out metrics/retest.json
+```
+
+Every judge answer is already saved in `data/predictions.jsonl`, so the commands just redo the arithmetic. No AI is called.
 
 <p align="right">(<a href="#contents">↑ back to top</a>)</p>
 
