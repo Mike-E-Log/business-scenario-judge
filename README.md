@@ -113,7 +113,7 @@ A demonstration built for this measurement, not a system that ever served real c
 The rulings were made in **Eval Studio**, a local grading app I built for this project. Its code is not part of this repo; it appears here in screenshots.
 
 - **Blind side-by-side (pairwise) grading:** the two replies appear with model names hidden, and the grader picks **A better, B better, or tie**, plus reason tags.
-- **A blind re-grading pass** measures the grader's own consistency (the self-check below), with every first-pass verdict hidden.
+- **A blind re-grading pass** measures the grader's own consistency (Experiment 2 above), with every first-pass verdict hidden.
 - **A teaching layer** explains each phase of the eval in place.
 
 ![The grading surface: six-phase board on top, the current phase's teaching in place, one real matchup below](docs/screenshots/eval-studio-grading.png)
