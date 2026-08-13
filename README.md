@@ -4,7 +4,7 @@
 
 - **The idea:** an AI judge is only a trustworthy stand-in for a human after you measure how well it matches that human.
 - **This repo is that measurement, done honestly.** Every human ruling and every judge answer is saved here. Two commands re-run all the math on your machine. Automated checks fail if the key numbers or honesty statements in this file drift from the saved data.
-- **The unflattering result ships anyway:** on the 15 test chats, a do-nothing judge that gives the same answer every time matches the human as often as the taught judge. Both land on 53%.
+- **The unflattering result ships anyway:** on the 15 test chats, a do-nothing judge that gives the same answer every time matches the human as often as the calibrated judge. Both land on 53%, and 15 chats is too small a test to tell the two judges apart, which is itself the finding.
 
 [![tests](https://github.com/Mike-E-Log/business-scenario-judge/actions/workflows/tests.yml/badge.svg)](https://github.com/Mike-E-Log/business-scenario-judge/actions/workflows/tests.yml)
 [![leak-scan](https://github.com/Mike-E-Log/business-scenario-judge/actions/workflows/leak-scan.yml/badge.svg)](https://github.com/Mike-E-Log/business-scenario-judge/actions/workflows/leak-scan.yml)
@@ -36,10 +36,10 @@
 flowchart TD
     A["60 service chats <br>from the MultiWOZ 2.2 research corpus"] --> B["2 AI replies written for each chat: <br>one asked to answer well, <br>one planted with a realistic flaw, <br>shown in coin-flipped order"]
     B --> C["One person grades each pair blind: <br>A better / B better / tie <br>60 rulings"]
-    C --> D["Fixed split: <br>45 teaching chats, 15 test chats"]
+    C --> D["Fixed split: <br>45 calibration chats, 15 test chats"]
     C --> R["Self-check: <br>15 chats re-graded blind, days later, <br>first-pass verdicts hidden"]
-    D --> E["Taught judge: <br>prompt carries 12 of the 45 teaching rulings <br>plus tag patterns from all 45"]
-    D --> F["Untaught judge: <br>same model, no examples"]
+    D --> E["Calibrated judge: <br>prompt carries 12 of the 45 calibration rulings <br>plus tag patterns from all 45"]
+    D --> F["Uncalibrated judge: <br>same model, no examples"]
     E --> G["Both judges rule every chat, <br>scored on the 15 test chats only"]
     F --> G
     G --> H["Score each judge <br>against the person's rulings"]
@@ -84,7 +84,7 @@ A demonstration built for this measurement, not a system that ever served real c
   - Reply one: written by `claude-sonnet-5`, asked to answer well.
   - Reply two: written by `claude-haiku-4-5-20251001`, asked to answer plausibly while slipping in one realistic service flaw.
   - Which reply appears first is a coin flip fixed in advance, so position carries no information.
-  - Both judges, taught and untaught, run on `claude-sonnet-5`: the same model that wrote reply one. Why that matters is in [Limitations](#limitations).
+  - Both judges, calibrated and uncalibrated, run on `claude-sonnet-5`: the same model that wrote reply one. Why that matters is in [Limitations](#limitations).
 
 <p align="right">(<a href="#contents">↑ back to top</a>)</p>
 
@@ -93,18 +93,18 @@ A demonstration built for this measurement, not a system that ever served real c
 ## Experiment 1: the judge calibration
 
 1. One person read each chat and picked between two AI answers, 60 times: A better, B better, or tie (a "pairwise" comparison).
-2. An AI judge was taught (the "calibrated" judge) from the 45 teaching rulings: its prompt carries 12 of them as worked examples, plus the person's reason-tag patterns counted across all 45.
-3. Both the taught judge and an untaught judge then ruled the other 15 chats, which were held out of the teaching step. Which chat belongs to which group is recorded in `data/gold_set.jsonl`, so anyone can check the split.
+2. An AI judge was calibrated from 45 of those rulings: its prompt carries 12 of them as worked examples, plus the person's reason-tag patterns counted across all 45.
+3. Both the calibrated judge and an uncalibrated judge then ruled the other 15 chats, which were held out of the calibration step. Which chat belongs to which group is recorded in `data/gold_set.jsonl`, so anyone can check the split.
 4. The plan was written before the judges ran: [PREREGISTRATION.md](PREREGISTRATION.md). Preregistration is the research habit of committing to a plan before seeing the results, so the goalposts cannot move afterward. That file carries a dated correction note where its own timing wording claimed more than the git record can prove.
 
 ### The honest result
 
-**Bottom line: the teaching has not proven itself. The taught judge edges the untaught one on this run, but it only matches a do-nothing judge, and the sample is too small to call either gap real.**
+**Bottom line: the calibration has not proven itself. The calibrated judge edges the uncalibrated one on this run, but it only matches a do-nothing judge, and the sample is too small to call either gap real.**
 
-- **The score: 53% against 40%.** The taught judge agreed with the person on 8 of the 15 test chats (53%). The untaught judge agreed on 6 of 15 (40%).
-- **Why that is not a win yet:** 15 chats is a small test, so luck alone can move these numbers a lot. Statistically, the taught judge's true skill could sit anywhere from about 27% to 80%, and the untaught judge's anywhere from about 13% to 67% (`metrics/results.json`). The two ranges overlap heavily, so this one run cannot show the teaching truly helped.
-- **A harsher comparison:** a do-nothing judge that ignores the chat and always answers "A better" (the person's most common ruling in the teaching half) also lands on 53%, so the taught judge only ties it (recorded as `majority_label_baseline` in `metrics/results.json`). The matching number is no accident: "A better" is the correct answer on 8 of these 15 chats (53%), and a judge showing no real skill drifts toward exactly that base rate.
-- **And the tie itself is fragile:** the blind self-check re-ruled 5 of these 15 test chats and flipped one (`mwz_SNG0360`). Under those second-pass rulings the taught judge scores 60% and the do-nothing judge about 47%, so one changed ruling ends the tie. Numbers this small settle nothing, in either direction.
+- **The score: 53% against 40%.** The calibrated judge agreed with the person on 8 of the 15 test chats (53%). The uncalibrated judge agreed on 6 of 15 (40%).
+- **Why that is not a win yet:** 15 chats is a small test, so luck alone can move these numbers a lot. Statistically, the calibrated judge's true skill could sit anywhere from about 27% to 80%, and the uncalibrated judge's anywhere from about 13% to 67% (`metrics/results.json`). The two ranges overlap heavily, so this one run cannot show the calibration truly helped.
+- **A harsher comparison:** a do-nothing judge that ignores the chat and always answers "A better" (the person's most common ruling in the calibration half) also lands on 53%, so the calibrated judge only ties it (recorded as `majority_label_baseline` in `metrics/results.json`). The matching number is no accident: "A better" is the correct answer on 8 of these 15 chats (53%), and a judge showing no real skill drifts toward exactly that base rate.
+- **And the tie itself is fragile:** the blind self-check re-ruled 5 of these 15 test chats and flipped one (`mwz_SNG0360`). Under those second-pass rulings the calibrated judge scores 60% and the do-nothing judge about 47%, so one changed ruling ends the tie. Numbers this small settle nothing, in either direction.
 - **Shown, not hidden:** the tie sits in this file's opening lines, and an automated check compares this text against the data files, so the admission cannot quietly drift or disappear.
 
 <p align="right">(<a href="#contents">↑ back to top</a>)</p>
@@ -190,7 +190,7 @@ Every judge answer is already saved in `data/predictions.jsonl`, so the commands
 
 ## Repository layout
 
-- `data/gold_set.jsonl`: the 60 chats, the person's ruling, the teach/test split, and reason tags
+- `data/gold_set.jsonl`: the 60 chats, the person's ruling, the calibration/test split, and reason tags
 - `data/predictions.jsonl`: every ruling from both judges
 - `data/retest_items.json`: the fixed draw of 15 chats ruled twice
 - `data/retest.jsonl`: both rulings and the memory answer for each re-ruled chat
