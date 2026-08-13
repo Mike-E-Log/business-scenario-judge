@@ -35,13 +35,13 @@ flowchart TD
     A["60 service chats<br>from the MultiWOZ 2.2 research corpus"] --> B["2 AI replies written for each chat:<br>one asked to answer well,<br>one planted with a realistic flaw,<br>shown in coin-flipped order"]
     B --> C["One person grades each pair blind:<br>A better / B better / tie<br>60 rulings"]
     C --> D["Fixed split:<br>45 teaching chats, 15 test chats"]
-    C --> R["Self-check:<br>15 chats re-graded blind, days later<br>80% matched the first pass"]
+    C --> R["Self-check:<br>15 chats re-graded blind, days later,<br>first-pass verdicts hidden"]
     D --> E["Taught judge:<br>prompt carries 12 of the 45 teaching rulings<br>plus tag patterns from all 45"]
     D --> F["Untaught judge:<br>same model, no examples"]
     E --> G["Both judges rule every chat,<br>scored on the 15 test chats only"]
     F --> G
-    G --> H["Score each judge against the person:<br>53% taught, 40% untaught,<br>and a do-nothing judge also lands on 53%"]
-    H --> J["Honest public report:<br>wide uncertainty stated, the tie disclosed"]
+    G --> H["Score each judge<br>against the person's rulings"]
+    H --> J["Honest public report:<br>numbers recompute from committed data,<br>uncertainty stated"]
     R --> J
 ```
 
