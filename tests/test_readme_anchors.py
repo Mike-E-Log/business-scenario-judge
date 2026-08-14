@@ -24,8 +24,9 @@ def test_every_internal_link_resolves_to_a_heading():
 
 def test_experiment_sections_exist_and_are_adjacent():
     readme = (REPO / "README.md").read_text(encoding="utf-8")
-    i1 = readme.find("## Experiment 1: the judge calibration")
-    i2 = readme.find("## Experiment 2: the self-check (grading twice)")
+    # Operator swap 2026-08-13: the self-check (the measuring stick) reads first.
+    i1 = readme.find("## Experiment 1: the self-check (grading twice)")
+    i2 = readme.find("## Experiment 2: the judge calibration")
     assert 0 < i1 < i2, "experiment sections missing or misordered"
     between = readme[i1:i2]
     assert between.count("\n## ") == 0, "another top section sits between the two experiments"

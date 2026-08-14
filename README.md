@@ -21,9 +21,9 @@
 - [What this demonstrates](#what-this-demonstrates)
 - [The problem](#the-problem)
 - [What this is, exactly](#what-this-is-exactly)
-- [Experiment 1: the judge calibration](#experiment-1-the-judge-calibration)
+- [Experiment 1: the self-check (grading twice)](#experiment-1-the-self-check-grading-twice)
+- [Experiment 2: the judge calibration](#experiment-2-the-judge-calibration)
   - [The honest result](#the-honest-result)
-- [Experiment 2: the self-check (grading twice)](#experiment-2-the-self-check-grading-twice)
 - [Built with Eval Studio](#built-with-eval-studio)
 - [Limitations](#limitations)
 - [Running it yourself](#running-it-yourself)
@@ -58,7 +58,7 @@ An eval done the way the field says it should be done, at honest scale:
 - **Measure the judge before trusting it.** The whole repo is the standard first step: score an AI judge against a human before using it as a stand-in.
 - **Honesty enforced by tests, not intentions.** The prose in this file is pinned to the data files; a claim that drifts fails the build.
 - **Reproducible by anyone.** Every ruling and prediction is committed; two commands redo all the math with no AI account.
-- **The measurer gets measured too.** The one human gold standard is itself tested for consistency (Experiment 2).
+- **The measurer gets measured too.** The one human gold standard is itself tested for consistency (Experiment 1).
 
 <p align="right">(<a href="#contents">↑ back to top</a>)</p>
 
@@ -90,7 +90,32 @@ A demonstration built for this measurement, not a system that ever served real c
 
 ---
 
-## Experiment 1: the judge calibration
+## Experiment 1: the self-check (grading twice)
+
+One person is the entire gold standard here, so the repo measures that person too.
+
+- **The self-check: 80% over 15 scenarios ruled twice** (12 of 15 matched). The same 15 chats were re-ruled 2–4 days later (a range because individual rulings carry no timestamps), with every first-pass verdict hidden.
+
+| Statistic | Value | Plain meaning |
+|---|---|---|
+| Raw match | 80% | 12 of the 15 second rulings matched the first |
+| 95% Wilson range | 55%–93% | with only 15 chats, the true consistency could plausibly sit anywhere from 55% to 93%; 80% is the middle of a wide range, not a precise number |
+| Chance-corrected agreement (Cohen's κ) | 0.526 | how much better the match is than lucky guessing: 0 means pure luck, 1 means perfect; 15 chats is too few to attach a firm strength label |
+
+- **The memory question.** After re-ruling each chat, the app asked: do you remember your first ruling? One answer per chat is stored in `data/retest.jsonl`. Every answer was no.
+  - Keeping only the chats answered no or unsure changes nothing (the restriction is not selective here: every answer was no).
+  - Being asked about memory can itself nudge later rulings; that side effect is disclosed rather than designed away.
+  - Saying no cannot prove memory played no part, so 80% stays an upper bound on this one person's consistency.
+- **The sample was locked in advance.** The 15 re-ruled chats came from a fixed random draw saved in `data/retest_items.json` before the re-grading began, so they could not be hand-picked afterward. A match means the exact same verdict: A better, B better, or tie.
+
+![Blind retest results screen: 80 percent agreement with yourself, 55 to 93 percent interval, kappa 0.526](docs/screenshots/eval-studio-retest-results.png)
+*The self-check as the app reported it: 12 of 15 matched, the wide range stated, the chance-corrected score beside it.*
+
+<p align="right">(<a href="#contents">↑ back to top</a>)</p>
+
+---
+
+## Experiment 2: the judge calibration
 
 1. One person read each chat and picked between two AI answers, 60 times: A better, B better, or tie (a "pairwise" comparison).
 2. An AI judge was calibrated from 45 of those rulings: its prompt carries 12 of them as worked examples, plus the person's reason-tag patterns counted across all 45.
@@ -105,7 +130,7 @@ A demonstration built for this measurement, not a system that ever served real c
 - **Why that is not a win yet:** 15 chats is a small test, so luck alone can move these numbers a lot. Statistically, the calibrated judge's true skill could sit anywhere from about 27% to 80%, and the uncalibrated judge's anywhere from about 13% to 67% (`metrics/results.json`). The two ranges overlap heavily, so this one run cannot show the calibration truly helped.
 - **A harsher comparison:** a do-nothing judge that ignores the chat and always answers "A better" (the person's most common ruling in the calibration half) also lands on 53%, so the calibrated judge only ties it (recorded as `majority_label_baseline` in `metrics/results.json`). The matching number is no accident: "A better" is the correct answer on 8 of these 15 chats (53%), and a judge showing no real skill drifts toward exactly that base rate.
 - **And the tie itself is fragile:** the blind self-check re-ruled 5 of these 15 test chats and flipped one (`mwz_SNG0360`). Under those second-pass rulings the calibrated judge scores 60% and the do-nothing judge about 47%, so one changed ruling ends the tie. Numbers this small settle nothing, in either direction.
-- **No judge could have aced this test:** the gold standard is one person whose own blind re-grading agrees with itself at kappa 0.526 (Experiment 2). A judge cannot match the rulings more closely than the person matches themselves, so label noise caps every score here. The tie says as much about the measuring stick as about the judges.
+- **No judge could have aced this test:** the gold standard is one person whose own blind re-grading agrees with itself at kappa 0.526 (Experiment 1). A judge cannot match the rulings more closely than the person matches themselves, so label noise caps every score here. The tie says as much about the measuring stick as about the judges.
 - **Shown, not hidden:** the tie sits in this file's opening lines, and an automated check compares this text against the data files, so the admission cannot quietly drift or disappear.
 
 **Scoreboard: how often each grader matched the person**
@@ -148,37 +173,12 @@ Which reply each grader picked: A, B, or Tie. This table recomputes from `data/g
 
 ---
 
-## Experiment 2: the self-check (grading twice)
-
-One person is the entire gold standard here, so the repo measures that person too.
-
-- **The self-check: 80% over 15 scenarios ruled twice** (12 of 15 matched). The same 15 chats were re-ruled 2–4 days later (a range because individual rulings carry no timestamps), with every first-pass verdict hidden.
-
-| Statistic | Value | Plain meaning |
-|---|---|---|
-| Raw match | 80% | 12 of the 15 second rulings matched the first |
-| 95% Wilson range | 55%–93% | with only 15 chats, the true consistency could plausibly sit anywhere from 55% to 93%; 80% is the middle of a wide range, not a precise number |
-| Chance-corrected agreement (Cohen's κ) | 0.526 | how much better the match is than lucky guessing: 0 means pure luck, 1 means perfect; 15 chats is too few to attach a firm strength label |
-
-- **The memory question.** After re-ruling each chat, the app asked: do you remember your first ruling? One answer per chat is stored in `data/retest.jsonl`. Every answer was no.
-  - Keeping only the chats answered no or unsure changes nothing (the restriction is not selective here: every answer was no).
-  - Being asked about memory can itself nudge later rulings; that side effect is disclosed rather than designed away.
-  - Saying no cannot prove memory played no part, so 80% stays an upper bound on this one person's consistency.
-- **The sample was locked in advance.** The 15 re-ruled chats came from a fixed random draw saved in `data/retest_items.json` before the re-grading began, so they could not be hand-picked afterward. A match means the exact same verdict: A better, B better, or tie.
-
-![Blind retest results screen: 80 percent agreement with yourself, 55 to 93 percent interval, kappa 0.526](docs/screenshots/eval-studio-retest-results.png)
-*The self-check as the app reported it: 12 of 15 matched, the wide range stated, the chance-corrected score beside it.*
-
-<p align="right">(<a href="#contents">↑ back to top</a>)</p>
-
----
-
 ## Built with Eval Studio
 
 The rulings were made in **Eval Studio**, a local grading app I built for this project. Its code is not part of this repo; it appears here in screenshots.
 
 - **Blind side-by-side (pairwise) grading:** the two replies appear with model names hidden, and the grader picks **A better, B better, or tie**, plus reason tags.
-- **A blind re-grading pass** measures the grader's own consistency (Experiment 2 above), with every first-pass verdict hidden.
+- **A blind re-grading pass** measures the grader's own consistency (Experiment 1 above), with every first-pass verdict hidden.
 
 ![The grading screen mid-run: six-phase progress board on top, one real matchup below, model names hidden](docs/screenshots/eval-studio-grading.png)
 *The grading screen, captured mid-run. Model names are hidden so a pick cannot lean on them.*
