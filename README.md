@@ -99,13 +99,45 @@ A demonstration built for this measurement, not a system that ever served real c
 
 ### The honest result
 
-**Bottom line: the calibration has not proven itself. The calibrated judge edges the uncalibrated one on this run, but it only matches a do-nothing judge, and the sample is too small to call either gap real.**
+**Bottom line: this test is too small to prove the calibration helped, and too noisy for any judge to have shown a clear win. The calibrated judge edges the uncalibrated one on this run, but it only matches the do-nothing judge, so the honest verdict is: not proven here, not disproven either.**
 
 - **The score: 53% against 40%.** The calibrated judge agreed with the person on 8 of the 15 test chats (53%). The uncalibrated judge agreed on 6 of 15 (40%).
 - **Why that is not a win yet:** 15 chats is a small test, so luck alone can move these numbers a lot. Statistically, the calibrated judge's true skill could sit anywhere from about 27% to 80%, and the uncalibrated judge's anywhere from about 13% to 67% (`metrics/results.json`). The two ranges overlap heavily, so this one run cannot show the calibration truly helped.
 - **A harsher comparison:** a do-nothing judge that ignores the chat and always answers "A better" (the person's most common ruling in the calibration half) also lands on 53%, so the calibrated judge only ties it (recorded as `majority_label_baseline` in `metrics/results.json`). The matching number is no accident: "A better" is the correct answer on 8 of these 15 chats (53%), and a judge showing no real skill drifts toward exactly that base rate.
 - **And the tie itself is fragile:** the blind self-check re-ruled 5 of these 15 test chats and flipped one (`mwz_SNG0360`). Under those second-pass rulings the calibrated judge scores 60% and the do-nothing judge about 47%, so one changed ruling ends the tie. Numbers this small settle nothing, in either direction.
+- **No judge could have aced this test:** the gold standard is one person whose own blind re-grading agrees with itself at kappa 0.526 (Experiment 2). A judge cannot match the rulings more closely than the person matches themselves, so label noise caps every score here. The tie says as much about the measuring stick as about the judges.
 - **Shown, not hidden:** the tie sits in this file's opening lines, and an automated check compares this text against the data files, so the admission cannot quietly drift or disappear.
+
+All four graders at a glance:
+
+| Grader | Match with the person's rulings | Measured on |
+|---|---|---|
+| Calibrated judge | 53% (8 of 15) | the 15 held-out chats |
+| Uncalibrated judge | 40% (6 of 15) | the 15 held-out chats |
+| Do-nothing judge (always "A better") | 53% (8 of 15) | the 15 held-out chats |
+| The person, re-ruling blind days later | 80% (12 of 15) | 15 chats drawn from all 60 |
+
+*The last row is not a competitor: it is the same person against their own earlier rulings, and it caps what any judge could score here.*
+
+Every ruling on the held-out chats, one row per chat. This table recomputes from `data/gold_set.jsonl` and `data/predictions.jsonl`, and a test fails if it drifts from them:
+
+| Chat | The person | Calibrated judge | Uncalibrated judge | Do-nothing judge |
+|---|---|---|---|---|
+| `mwz_PMUL3599` | B better | A better | A better | A better |
+| `mwz_SNG0081` | A better | A better | A better | A better |
+| `mwz_SNG0098` | B better | B better | A better | A better |
+| `mwz_SNG0099` | A better | A better | A better | A better |
+| `mwz_SNG01534` | A better | A better | A better | A better |
+| `mwz_SNG0280` | B better | A better | A better | A better |
+| `mwz_SNG0323` | A better | B better | tie | A better |
+| `mwz_SNG0360` | A better | B better | B better | A better |
+| `mwz_SNG0433` | A better | A better | A better | A better |
+| `mwz_SNG0571` | A better | B better | B better | A better |
+| `mwz_SNG0649` | B better | A better | A better | A better |
+| `mwz_SNG0742` | B better | A better | A better | A better |
+| `mwz_SNG0775` | B better | B better | B better | A better |
+| `mwz_SNG0840` | A better | A better | A better | A better |
+| `mwz_SNG1150` | B better | B better | A better | A better |
 
 ![Judge results screen: three tiles, calibrated 53 percent with range 27 to 80, uncalibrated 40 percent with range 13 to 67, do-nothing judge 53 percent](docs/screenshots/eval-studio-judge-results.png)
 *The app's Judge results screen, rendered from the same committed numbers this section reports.*
