@@ -7,7 +7,7 @@ import re
 from pathlib import Path
 
 REPO = Path(__file__).parents[1]
-NAME = {0: "A better", 1: "B better", 2: "tie"}
+NAME = {0: "A", 1: "B", 2: "Tie"}
 
 
 def _expected_rows():
@@ -20,7 +20,7 @@ def _expected_rows():
         pred.setdefault(p["item_id"], {})[p["judge"]] = p["label"]
     return [
         f"| `{i}` | {NAME[gold[i]['label']]} | {NAME[pred[i]['calibrated']]} "
-        f"| {NAME[pred[i]['baseline']]} | A better |"
+        f"| {NAME[pred[i]['baseline']]} | A |"
         for i in sorted(i for i, g in gold.items() if g["split"] == "heldout")
     ]
 

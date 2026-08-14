@@ -108,7 +108,7 @@ A demonstration built for this measurement, not a system that ever served real c
 - **No judge could have aced this test:** the gold standard is one person whose own blind re-grading agrees with itself at kappa 0.526 (Experiment 2). A judge cannot match the rulings more closely than the person matches themselves, so label noise caps every score here. The tie says as much about the measuring stick as about the judges.
 - **Shown, not hidden:** the tie sits in this file's opening lines, and an automated check compares this text against the data files, so the admission cannot quietly drift or disappear.
 
-All four graders at a glance:
+**Scoreboard: how often each grader matched the person**
 
 | Grader | Match with the person's rulings | Measured on |
 |---|---|---|
@@ -119,25 +119,27 @@ All four graders at a glance:
 
 *The last row is not a competitor: it is the same person against their own earlier rulings, and it caps what any judge could score here.*
 
-Every ruling on the held-out chats, one row per chat. This table recomputes from `data/gold_set.jsonl` and `data/predictions.jsonl`, and a test fails if it drifts from them:
+**Chat-by-chat rulings on the 15 held-out chats**
+
+Which reply each grader picked: A, B, or Tie. This table recomputes from `data/gold_set.jsonl` and `data/predictions.jsonl`, and a test fails if it drifts from them:
 
 | Chat | The person | Calibrated judge | Uncalibrated judge | Do-nothing judge |
 |---|---|---|---|---|
-| `mwz_PMUL3599` | B better | A better | A better | A better |
-| `mwz_SNG0081` | A better | A better | A better | A better |
-| `mwz_SNG0098` | B better | B better | A better | A better |
-| `mwz_SNG0099` | A better | A better | A better | A better |
-| `mwz_SNG01534` | A better | A better | A better | A better |
-| `mwz_SNG0280` | B better | A better | A better | A better |
-| `mwz_SNG0323` | A better | B better | tie | A better |
-| `mwz_SNG0360` | A better | B better | B better | A better |
-| `mwz_SNG0433` | A better | A better | A better | A better |
-| `mwz_SNG0571` | A better | B better | B better | A better |
-| `mwz_SNG0649` | B better | A better | A better | A better |
-| `mwz_SNG0742` | B better | A better | A better | A better |
-| `mwz_SNG0775` | B better | B better | B better | A better |
-| `mwz_SNG0840` | A better | A better | A better | A better |
-| `mwz_SNG1150` | B better | B better | A better | A better |
+| `mwz_PMUL3599` | B | A | A | A |
+| `mwz_SNG0081` | A | A | A | A |
+| `mwz_SNG0098` | B | B | A | A |
+| `mwz_SNG0099` | A | A | A | A |
+| `mwz_SNG01534` | A | A | A | A |
+| `mwz_SNG0280` | B | A | A | A |
+| `mwz_SNG0323` | A | B | Tie | A |
+| `mwz_SNG0360` | A | B | B | A |
+| `mwz_SNG0433` | A | A | A | A |
+| `mwz_SNG0571` | A | B | B | A |
+| `mwz_SNG0649` | B | A | A | A |
+| `mwz_SNG0742` | B | A | A | A |
+| `mwz_SNG0775` | B | B | B | A |
+| `mwz_SNG0840` | A | A | A | A |
+| `mwz_SNG1150` | B | B | A | A |
 
 ![Judge results screen: three tiles, calibrated 53 percent with range 27 to 80, uncalibrated 40 percent with range 13 to 67, do-nothing judge 53 percent](docs/screenshots/eval-studio-judge-results.png)
 *The app's Judge results screen, rendered from the same committed numbers this section reports.*
