@@ -37,10 +37,10 @@
 
 An eval done the way the field says it should be done, at honest scale:
 
-- **Measure the judge before trusting it.** The whole repo is the standard first step: score an AI judge against a human before using it as a stand-in.
-- **Honesty enforced by tests, not intentions.** The prose in this file is pinned to the data files; a claim that drifts fails the build.
-- **Reproducible by anyone.** Every ruling and prediction is committed; two commands redo all the math with no AI account.
-- **The measurer gets measured too.** The one human gold standard is itself tested for consistency (Experiment 1).
+- **The judge gets tested before it gets trusted.** Score an AI judge against a human before letting it stand in for one. That standard first step is this whole repo.
+- **The claims cannot quietly change.** Every number on this page is checked against the saved data by automated tests. If the words drift from the data, the page fails its own build.
+- **You do not have to take my word for it.** Every ruling and every judge answer is saved here. Two commands re-run all the math on your machine, no AI account needed.
+- **Even the human gets checked.** My rulings are the measuring stick, so their consistency is measured too ([Experiment 1](#experiment-1-the-self-check-grading-twice)).
 
 <p align="right">(<a href="#contents">↑ back to top</a>)</p>
 
