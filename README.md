@@ -48,15 +48,15 @@ An eval done the way the field says it should be done, at honest scale:
 
 ## What this taught
 
-Building and running this eval taught me five things I will use on every eval I build after it:
+This project taught me five things I will use in every eval after it:
 
-- **An AI judge needs more teaching examples than you expect.** This judge learned from 45 rulings, 12 of them shown as worked examples. The practitioner floor is "100+ labeled examples, ongoing weekly maintenance" ([Hamel Husain's evals FAQ](https://hamel.dev/blog/posts/evals-faq/)). Below that floor, wide error ranges are the expected outcome, and that is what happened here.
-- **A small test cannot crown a winner.** On 15 held-out chats, luck alone moves a score by double digits, a judge with no skill drifts toward the most common answer, and one changed ruling flips the story ([The honest result](#the-honest-result)). Before trusting any judge score, ask how big the test was.
-- **Check the grader before the judge.** All 60 rulings took one sitting, and each felt certain. But re-grading blind days later, I matched my own earlier rulings on only 12 of 15 chats ([Experiment 1](#experiment-1-the-self-check-grading-twice)). A judge cannot agree with my labels more often than I agree with myself, so my own consistency had to be measured first.
-- **Planted flaws are not real failures.** To create labels fast, each pair carried a planted flaw: the "right" answer was decided before any grading. My blind rulings tracked something else: clarity, instruction-following, completeness ([the reason tags](metrics/results.md)), and the check in [Limitations](#limitations) found no measurable link to the planted flaws. Ground-truth labels belong in a dataset, but they should come from real outputs and real review, not from flaws invented in advance. "Error analysis is the most important activity in evals" ([same FAQ](https://hamel.dev/blog/posts/evals-faq/)).
-- **Write the rules down before you see the results.** The pass bar was committed in [PREREGISTRATION.md](PREREGISTRATION.md) before the judges ran, so a weak score could not be quietly reframed as a win. The same idea guards this page: automated tests compare every claim here against the saved data files, and the build fails if they drift. Good intentions did not keep this report honest; the checks did.
+- **An AI judge needs more examples than you expect.** I taught this judge with 45 rulings. The practitioner floor is 100 or more, kept fresh over time ([Hamel Husain's evals FAQ](https://hamel.dev/blog/posts/evals-faq/)). Under that floor, wide error ranges are the expected result. That is what I got.
+- **A small test cannot pick a winner.** With only 15 test chats, luck moves the scores, and one changed ruling flips the story ([The honest result](#the-honest-result)). Before trusting any judge score, ask how big the test was.
+- **Check the grader before the judge.** Days later, I re-graded 15 chats blind. I matched my own rulings on just 12 of them ([Experiment 1](#experiment-1-the-self-check-grading-twice)). A judge cannot agree with me more than I agree with myself. So measure the grader first.
+- **Planted flaws are not real failures.** I planted one flaw in each pair to create the answers fast. My blind rulings did not track them ([Limitations](#limitations)): what I actually flagged was clarity, missed instructions, and missing pieces ([the reason tags](metrics/results.md)). Labels should come from real failures, found by reading real outputs ([same FAQ](https://hamel.dev/blog/posts/evals-faq/)).
+- **Set the pass bar before the results exist.** The bar was written down before the judges ran ([PREREGISTRATION.md](PREREGISTRATION.md)), so a weak score could not be dressed up as a win. Tests do the same for this page: if a claim drifts from the saved data, the build fails.
 
-**I set out to prove an AI judge could be trusted. What I proved is how to check one.**
+**Five lessons for one experiment. Fair trade.**
 
 <p align="right">(<a href="#contents">↑ back to top</a>)</p>
 
