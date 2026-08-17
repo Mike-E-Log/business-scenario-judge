@@ -4,7 +4,7 @@
 
 - **What this is:** 60 real service chats blind-graded by one person in a labeling tool built for the job; a calibrated AI judge and an uncalibrated one then scored against those rulings on 15 held-out chats.
 - **The idea:** an AI judge is only a trustworthy stand-in for a human after you measure how well it matches that human.
-- **The unflattering result ships anyway:** on the 15 test chats, a do-nothing judge that gives the same answer every time matches the human as often as the calibrated judge. Both land on 53%, and 15 chats is too small a test to tell the two judges apart, which is itself the finding.
+- **The unflattering result ships anyway:** on the 15 test chats, a do-nothing judge that gives the same answer every time matches the human as often as the calibrated judge. Both land on 53%, and 15 chats is too small a test to tell the two judges apart, which is itself the finding. What that finding paid for is the point: [What this taught](#what-this-taught).
 
 [![tests](https://github.com/Mike-E-Log/business-scenario-judge/actions/workflows/tests.yml/badge.svg)](https://github.com/Mike-E-Log/business-scenario-judge/actions/workflows/tests.yml)
 [![leak-scan](https://github.com/Mike-E-Log/business-scenario-judge/actions/workflows/leak-scan.yml/badge.svg)](https://github.com/Mike-E-Log/business-scenario-judge/actions/workflows/leak-scan.yml)
@@ -20,6 +20,7 @@
 ## Contents
 
 - [What this demonstrates](#what-this-demonstrates)
+- [What this taught](#what-this-taught)
 - [The whole eval, in one diagram](#the-whole-eval-in-one-diagram)
 - [The problem](#the-problem)
 - [What this is, exactly](#what-this-is-exactly)
@@ -40,6 +41,19 @@ An eval done the way the field says it should be done, at honest scale:
 - **Honesty enforced by tests, not intentions.** The prose in this file is pinned to the data files; a claim that drifts fails the build.
 - **Reproducible by anyone.** Every ruling and prediction is committed; two commands redo all the math with no AI account.
 - **The measurer gets measured too.** The one human gold standard is itself tested for consistency (Experiment 1).
+
+<p align="right">(<a href="#contents">↑ back to top</a>)</p>
+
+---
+
+## What this taught
+
+The headline result is a null; the lessons are not. Each one is a design change the next run inherits:
+
+- **Calibration was under-fed.** The calibrated prompt carried 12 worked examples plus reason-tag patterns from 45 rulings. Practitioner guidance puts a dependable AI judge at "100+ labeled examples, ongoing weekly maintenance" ([Hamel Husain's evals FAQ](https://hamel.dev/blog/posts/evals-faq/)). With under half that number of labels, wide error ranges were the expected outcome; what this run adds is a measurement of exactly how wide.
+- **Pairwise is cheap to collect and noisy to trust.** The A better / B better / tie format made 60 rulings fast, and coin-flipped order removed position information. But the same person re-ruling blind matched themselves on only 12 of 15 chats, and one flipped ruling was enough to end the headline tie. A pairwise gold standard is only as solid as the grader's measured self-consistency, so that gets measured first here (Experiment 1).
+- **Premade labels lost to real criteria.** Each pair shipped with a built-in answer key: one reply asked to answer well, one with a planted flaw. The person's rulings showed no measurable link to that planted axis (the 26 of 59 check in [Limitations](#limitations)). The field's standard loop runs the other direction: read real outputs first, find the failures that actually occur, then build the labels and the taxonomy from those observed failures. "Error analysis is the most important activity in evals" because it "helps you decide what evals to write in the first place" ([same FAQ](https://hamel.dev/blog/posts/evals-faq/)). Planting flaws in advance assumed the failure taxonomy; the data disagreed with the assumption.
+- **What the next run inherits:** label past the 100-example floor, derive the taxonomy from observed errors before calibrating anything, and size the held-out set so the intervals can actually separate the judges.
 
 <p align="right">(<a href="#contents">↑ back to top</a>)</p>
 
