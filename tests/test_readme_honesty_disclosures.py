@@ -23,6 +23,10 @@ DISCLOSURES = [
     "MultiWOZ 2.2",
     "PREREGISTRATION.md",                           # pre-run plan + its correction note
     "one changed ruling ends the tie",              # tie fragility (audit 2026-08-13)
+    "a technical pass",                             # frozen-rule outcome disclosed
+    # (recruiter-pass 2026-08-17: prereg bar was cleared and must say so)
+    "0 to 33 points",                               # paired-delta CI surfaced
+    # (prereg-committed statistic; source metrics/results.json delta_ci95)
     "26 of 59",                                     # planted-flaw axis check (wording
     # pin only: the number's source data is deliberately not in this repo,
     # and the sentence must keep saying so)

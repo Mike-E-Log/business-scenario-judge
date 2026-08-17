@@ -11,8 +11,9 @@ from the MultiWOZ 2.2 dialogue corpus (MIT License).
   2.2 update: Zang et al., "MultiWOZ 2.2: A Dialogue Dataset with Additional
   Annotation Corrections and State Tracking Baselines" (ACL 2020 NLP4ConvAI).
 
-MIT notice retained per license terms: Copyright (c) the original MultiWOZ
-authors. Permission is hereby granted, free of charge, to any person obtaining
+MIT notice retained per license terms: Copyright (c) 2019 Paweł Budzianowski
+(verified against the upstream LICENSE file, 2026-08-17). Permission is hereby
+granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files, to deal in the
 Software without restriction. THE SOFTWARE IS PROVIDED "AS IS", WITHOUT
 WARRANTY OF ANY KIND.

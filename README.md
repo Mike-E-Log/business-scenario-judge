@@ -2,9 +2,9 @@
 
 ## Can you trust an AI to grade another AI? This repo checks.
 
-- **What this is:** 60 real service chats blind-graded by one person in a labeling tool built for the job; a calibrated AI judge and an uncalibrated one then scored against those rulings on 15 held-out chats.
+- **What this is:** one person blind-graded 60 real service chats in a labeling tool built for the job. Two AI judges were then scored against those rulings on 15 chats kept aside as the test: one calibrated (shown the person's example rulings first), one uncalibrated (shown none).
 - **The idea:** an AI judge is only a trustworthy stand-in for a human after you measure how well it matches that human.
-- **The unflattering result ships anyway:** on the 15 test chats, a do-nothing judge that gives the same answer every time matches the human as often as the calibrated judge. Both land on 53%, and 15 chats is too small a test to tell the two judges apart, which is itself the finding. What that finding paid for is the point: [What this taught](#what-this-taught).
+- **The unflattering result ships anyway:** a do-nothing judge that always gives the same answer matched the human as often as the calibrated one. Both land on 53%, and 15 test chats cannot tell the judges apart. That finding paid for the lessons: [What this taught](#what-this-taught).
 
 [![tests](https://github.com/Mike-E-Log/business-scenario-judge/actions/workflows/tests.yml/badge.svg)](https://github.com/Mike-E-Log/business-scenario-judge/actions/workflows/tests.yml)
 [![leak-scan](https://github.com/Mike-E-Log/business-scenario-judge/actions/workflows/leak-scan.yml/badge.svg)](https://github.com/Mike-E-Log/business-scenario-judge/actions/workflows/leak-scan.yml)
@@ -146,7 +146,9 @@ One person is the entire gold standard here, so the repo measures that person to
 **Bottom line: this test is too small to prove the calibration helped, and too noisy for any judge to have shown a clear win. The calibrated judge edges the uncalibrated one on this run, but it only matches the do-nothing judge, so the honest verdict is: not proven here, not disproven either.**
 
 - **The score: 53% against 40%.** The calibrated judge agreed with the person on 8 of the 15 test chats (53%). The uncalibrated judge agreed on 6 of 15 (40%).
+- **By the frozen rule, a technical pass.** The pre-run plan set one bar: the calibrated judge must score strictly above the uncalibrated one, and a tie fails ([PREREGISTRATION.md](PREREGISTRATION.md)). 53% against 40% clears it. This page holds the result to a harsher check anyway: the do-nothing comparison below, which was added after the run and is not part of the plan.
 - **Why that is not a win yet:** 15 chats is a small test, so luck alone can move these numbers a lot. Statistically, the calibrated judge's true skill could sit anywhere from about 27% to 80%, and the uncalibrated judge's anywhere from about 13% to 67% (`metrics/results.json`). The two ranges overlap heavily, so this one run cannot show the calibration truly helped.
+- **The paired test agrees.** The plan committed to comparing the two judges chat by chat, not just side by side. That number is saved too: the gap's plausible range runs from 0 to 33 points, touching zero, and an exact test on the 2 chats where only one judge was right gives p = 0.5 (`metrics/results.json`). Same verdict: not settled.
 - **A harsher comparison:** a do-nothing judge that ignores the chat and always answers "A better" (the person's most common ruling in the calibration half) also lands on 53%, so the calibrated judge only ties it (recorded as `majority_label_baseline` in `metrics/results.json`). The matching number is no accident: "A better" is the correct answer on 8 of these 15 chats (53%), and a judge showing no real skill drifts toward exactly that base rate.
 - **And the tie itself is fragile:** the blind self-check re-ruled 5 of these 15 test chats and flipped one (`mwz_SNG0360`). Under those second-pass rulings the calibrated judge scores 60% and the do-nothing judge about 47%, so one changed ruling ends the tie. Numbers this small settle nothing, in either direction.
 - **No judge could have aced this test:** the gold standard is one person whose own blind re-grading agrees with itself at kappa 0.526 (Experiment 1). A judge cannot match the rulings more closely than the person matches themselves, so label noise caps every score here. The tie says as much about the measuring stick as about the judges.
@@ -257,3 +259,7 @@ Every judge answer is already saved in `data/predictions.jsonl`, so the commands
 ## License
 
 Released under the MIT license (see [LICENSE](LICENSE)).
+
+<p align="right">(<a href="#contents">↑ back to top</a>)</p>
+
+---
