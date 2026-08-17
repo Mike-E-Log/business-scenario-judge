@@ -19,7 +19,6 @@
 
 ## Contents
 
-- [What this demonstrates](#what-this-demonstrates)
 - [What this taught](#what-this-taught)
 - [The whole eval, in one diagram](#the-whole-eval-in-one-diagram)
 - [The problem](#the-problem)
@@ -32,19 +31,6 @@
 - [Running it yourself](#running-it-yourself)
 - [Repository layout](#repository-layout)
 - [License](#license)
-
-## What this demonstrates
-
-Anyone can put impressive numbers in a README. This one is built so you can check them:
-
-- **The judge gets tested before it gets trusted.** Score an AI judge against a human before letting it stand in for one. That standard first step is this whole repo.
-- **The claims cannot quietly change.** Every number on this page is checked against the saved data by automated tests. If the words drift from the data, the page fails its own build.
-- **You do not have to take my word for it.** Every ruling and every judge answer is saved here. Two commands re-run all the math on your machine, no AI account needed.
-- **Even the human gets checked.** My rulings are the measuring stick, so their consistency is measured too ([Experiment 1](#experiment-1-the-self-check-grading-twice)).
-
-<p align="right">(<a href="#contents">↑ back to top</a>)</p>
-
----
 
 ## What this taught
 
@@ -225,7 +211,10 @@ The rulings were made in **Eval Studio**, a local grading app I built for this p
 
 ## Running it yourself
 
-A few minutes, no AI account needed:
+Anyone can put impressive numbers in a README. This one is built so you can check them:
+
+- **The claims cannot quietly change.** Every number on this page is checked against the saved data by automated tests. If the words drift, the build fails.
+- **You do not have to take my word for it.** Every ruling and every judge answer is saved in this repo. Two commands re-run all the math on your machine:
 
 ```
 pip install -r requirements.txt
@@ -233,7 +222,7 @@ python scoring/score.py --gold data/gold_set.jsonl --pred data/predictions.jsonl
 python scoring/retest_stats.py --retest data/retest.jsonl --items data/retest_items.json --out metrics/retest.json
 ```
 
-Every judge answer is already saved in `data/predictions.jsonl`, so the commands just redo the arithmetic. No AI is called.
+A few minutes, no AI account needed: every judge answer is already saved in `data/predictions.jsonl`, so the commands just redo the arithmetic. No AI is called.
 
 <p align="right">(<a href="#contents">↑ back to top</a>)</p>
 
