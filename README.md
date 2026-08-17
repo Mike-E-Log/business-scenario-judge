@@ -2,8 +2,8 @@
 
 ## Can you trust an AI to grade another AI? This repo checks.
 
+- **What this is:** 60 real service chats blind-graded by one person in a labeling tool built for the job; a calibrated AI judge and an uncalibrated one then scored against those rulings on 15 held-out chats.
 - **The idea:** an AI judge is only a trustworthy stand-in for a human after you measure how well it matches that human.
-- **This repo is that measurement, done honestly.** Every human ruling and every judge answer is saved here. Two commands re-run all the math on your machine. Automated checks fail if the key numbers or honesty statements in this file drift from the saved data.
 - **The unflattering result ships anyway:** on the 15 test chats, a do-nothing judge that gives the same answer every time matches the human as often as the calibrated judge. Both land on 53%, and 15 chats is too small a test to tell the two judges apart, which is itself the finding.
 
 [![tests](https://github.com/Mike-E-Log/business-scenario-judge/actions/workflows/tests.yml/badge.svg)](https://github.com/Mike-E-Log/business-scenario-judge/actions/workflows/tests.yml)
@@ -13,12 +13,14 @@
 
 <p align="center">
   <sub>Built by <a href="https://github.com/Mike-E-Log"><b>Mike Ilog</b></a> · AI Engineer · LLM &amp; agent evaluation &nbsp;·&nbsp; <a href="https://www.linkedin.com/in/mikeilog/">LinkedIn</a></sub>
+  <br>
+  <sub>Built with AI assistance (Claude); the 60 blind rulings, their reason tags, and the 2 to 4 day blind retest are entirely my own.</sub>
 </p>
 
 ## Contents
 
-- [The whole eval, in one diagram](#the-whole-eval-in-one-diagram)
 - [What this demonstrates](#what-this-demonstrates)
+- [The whole eval, in one diagram](#the-whole-eval-in-one-diagram)
 - [The problem](#the-problem)
 - [What this is, exactly](#what-this-is-exactly)
 - [Experiment 1: the self-check (grading twice)](#experiment-1-the-self-check-grading-twice)
@@ -29,6 +31,19 @@
 - [Running it yourself](#running-it-yourself)
 - [Repository layout](#repository-layout)
 - [License](#license)
+
+## What this demonstrates
+
+An eval done the way the field says it should be done, at honest scale:
+
+- **Measure the judge before trusting it.** The whole repo is the standard first step: score an AI judge against a human before using it as a stand-in.
+- **Honesty enforced by tests, not intentions.** The prose in this file is pinned to the data files; a claim that drifts fails the build.
+- **Reproducible by anyone.** Every ruling and prediction is committed; two commands redo all the math with no AI account.
+- **The measurer gets measured too.** The one human gold standard is itself tested for consistency (Experiment 1).
+
+<p align="right">(<a href="#contents">↑ back to top</a>)</p>
+
+---
 
 ## The whole eval, in one diagram
 
@@ -46,19 +61,6 @@ flowchart TD
     H --> J["Honest public report: <br>numbers recompute from committed data, <br>uncertainty stated"]
     R --> J
 ```
-
-<p align="right">(<a href="#contents">↑ back to top</a>)</p>
-
----
-
-## What this demonstrates
-
-An eval done the way the field says it should be done, at honest scale:
-
-- **Measure the judge before trusting it.** The whole repo is the standard first step: score an AI judge against a human before using it as a stand-in.
-- **Honesty enforced by tests, not intentions.** The prose in this file is pinned to the data files; a claim that drifts fails the build.
-- **Reproducible by anyone.** Every ruling and prediction is committed; two commands redo all the math with no AI account.
-- **The measurer gets measured too.** The one human gold standard is itself tested for consistency (Experiment 1).
 
 <p align="right">(<a href="#contents">↑ back to top</a>)</p>
 
