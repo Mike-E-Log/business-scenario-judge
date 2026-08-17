@@ -35,7 +35,7 @@
 
 ## What this demonstrates
 
-An eval done the way the field says it should be done, at honest scale:
+Anyone can put impressive numbers in a README. This one is built so you can check them:
 
 - **The judge gets tested before it gets trusted.** Score an AI judge against a human before letting it stand in for one. That standard first step is this whole repo.
 - **The claims cannot quietly change.** Every number on this page is checked against the saved data by automated tests. If the words drift from the data, the page fails its own build.
