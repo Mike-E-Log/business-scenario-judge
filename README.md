@@ -40,9 +40,7 @@ This project taught me five things I will use in every eval after it:
 - **A small test cannot pick a winner.** With only 15 test chats, luck moves the scores, and one changed ruling flips the story ([The honest result](#the-honest-result)). Before trusting any judge score, ask how big the test was.
 - **Check the grader before the judge.** Days later, I re-graded 15 chats blind. I matched my own rulings on just 12 of them ([Experiment 1](#experiment-1-the-self-check-grading-twice)). A judge cannot agree with me more than I agree with myself. So measure the grader first.
 - **Planted flaws are not real failures.** I planted one flaw in each pair to create the answers fast. My blind rulings did not track them ([Limitations](#limitations)): what I actually flagged was clarity, missed instructions, and missing pieces ([the reason tags](metrics/results.md)). Labels should come from real failures, found by reading real outputs ([same FAQ](https://hamel.dev/blog/posts/evals-faq/)).
-- **Set the pass bar before the results exist.** The bar was written down before the judges ran ([PREREGISTRATION.md](PREREGISTRATION.md)), so a weak score could not be dressed up as a win. Tests do the same for this page: if a claim drifts from the saved data, the build fails.
-
-**Five lessons for one experiment. Fair trade.**
+- **Decide what counts as success before you see the score.** Before the judges ran, I wrote down the rule for passing in a plan that does not change afterward ([PREREGISTRATION.md](PREREGISTRATION.md), the pre-run plan; researchers call this preregistration). With the rule fixed first, a weak score cannot be dressed up as a win. Tests guard this page the same way: if a claim drifts from the saved data, the build fails.
 
 <p align="right">(<a href="#contents">↑ back to top</a>)</p>
 
@@ -104,7 +102,7 @@ One person is the entire gold standard here, so the repo measures that person to
 | Statistic | Value | Plain meaning |
 |---|---|---|
 | Raw match | 80% | 12 of the 15 second rulings matched the first |
-| 95% Wilson range | 55%–93% | with only 15 chats, the true consistency could plausibly sit anywhere from 55% to 93%; 80% is the middle of a wide range, not a precise number |
+| 95% Wilson range | 55%–93% | the honest error margin: with only 15 chats, the true consistency could plausibly sit anywhere from 55% to 93%, so 80% is the middle of a wide range, not a precise number. It is reported so no one reads 80% as exact. (Wilson is the statistician whose formula fits small samples.) |
 | Chance-corrected agreement (Cohen's κ) | 0.526 | how much better the match is than lucky guessing: 0 means pure luck, 1 means perfect; 15 chats is too few to attach a firm strength label |
 
 - **The memory question.** After re-ruling each chat, the app asked: do you remember your first ruling? One answer per chat is stored in `data/retest.jsonl`. Every answer was no.
