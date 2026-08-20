@@ -24,8 +24,11 @@
 - [The problem](#the-problem)
 - [What this is, exactly](#what-this-is-exactly)
 - [Experiment 1: the self-check (grading twice)](#experiment-1-the-self-check-grading-twice)
+  - [The wide range in plain words](#the-wide-range-in-plain-words)
+  - [Kappa in plain words](#kappa-in-plain-words)
 - [Experiment 2: the judge calibration](#experiment-2-the-judge-calibration)
   - [The honest result](#the-honest-result)
+    - [The bootstrap range in plain words](#the-bootstrap-range-in-plain-words)
 - [Built with Eval Studio](#built-with-eval-studio)
 - [Limitations](#limitations)
 - [Running it yourself](#running-it-yourself)
@@ -114,6 +117,14 @@ One person is the entire gold standard here, so the repo measures that person to
 ![Blind retest results screen: 80 percent agreement with yourself, 55 to 93 percent interval, kappa 0.526](docs/screenshots/eval-studio-retest-results.png)
 *The self-check as the app reported it: 12 of 15 matched, the wide range stated, the chance-corrected score beside it.*
 
+### The wide range in plain words
+
+The self-check matched 12 of 15. That is 80%. But 15 is a small sample. Luck alone can flatter a small sample, or sell it short. The Wilson range states how far luck could stretch things here: the true consistency could plausibly sit anywhere in the 55%–93% band. (The Wilson formula is built for small samples like this one.) The range is printed so no one reads the single number as exact. Experiment 2 gives its judges the same honesty. Its ranges come from a different method, called a bootstrap, explained there.
+
+### Kappa in plain words
+
+Two graders can match a lot by accident. Each grader has habits: how often they say A, B, or tie. Those habits alone produce some matches, the way two coins can land the same. Kappa starts with the real matches. It subtracts the matches the two sides' habits together would produce by luck. Then it rescales what is left: 0 means pure luck, 1 means perfect. That is why a raw percent can flatter. The do-nothing judge in Experiment 2 matches 8 of 15 (53%) by giving one answer every time. Its kappa is 0.000: exactly luck, no skill. Kappa can even go below zero. A grader that matches less often than the two sides' habits would produce by luck lands negative. That is the uncalibrated judge's -0.164. The person's own 0.526 means real consistency, clearly above luck, on a small sample.
+
 <p align="right">(<a href="#contents">↑ back to top</a>)</p>
 
 ---
@@ -138,6 +149,10 @@ One person is the entire gold standard here, so the repo measures that person to
 - **And the tie itself is fragile:** the blind self-check re-ruled 5 of these 15 test chats and flipped one (`mwz_SNG0360`). Under those second-pass rulings the calibrated judge scores 60% and the do-nothing judge about 47%, so one changed ruling ends the tie. Numbers this small settle nothing, in either direction.
 - **No judge could have aced this test:** the gold standard is one person whose own blind re-grading agrees with itself at kappa 0.526 (Experiment 1). A judge cannot match the rulings more closely than the person matches themselves, so label noise caps every score here. The tie says as much about the measuring stick as about the judges.
 - **Shown, not hidden:** the tie sits in this file's opening lines, and an automated check compares this text against the data files, so the admission cannot quietly drift or disappear.
+
+#### The bootstrap range in plain words
+
+The judge scores need an honesty range too. The pre-run plan committed to a resampling method for the judge comparison ([PREREGISTRATION.md](PREREGISTRATION.md): a paired-delta bootstrap 95% CI with shared resample indices). A bootstrap re-draws the 15 results thousands of times, with replacement, from the same seeded recipe (`scoring/score.py`). The middle 95% of those re-draws becomes the range. The same method gives each judge its own wide band: about 27% to 80% for the calibrated judge. That single-judge band was not part of the pre-run plan; only the gap between the judges was. Small sample, wide band, same lesson as Experiment 1.
 
 **Scoreboard: how often each grader matched the person**
 
