@@ -141,12 +141,12 @@ One person is the entire gold standard here, so the repo measures that person to
 
 **Scoreboard: how often each grader matched the person**
 
-| Grader | Match with the person's rulings | Measured on |
-|---|---|---|
-| Calibrated judge | 53% (8 of 15) | the 15 held-out chats |
-| Uncalibrated judge | 40% (6 of 15) | the 15 held-out chats |
-| Do-nothing judge (always "A better") | 53% (8 of 15) | the 15 held-out chats |
-| The person, re-ruling blind days later | 80% (12 of 15) | 15 chats drawn from all 60 |
+| Grader | Match with the person's rulings | Luck-corrected match (kappa) | Measured on |
+|---|---|---|---|
+| Calibrated judge | 53% (8 of 15) | 0.054 | the 15 held-out chats |
+| Uncalibrated judge | 40% (6 of 15) | -0.164 | the 15 held-out chats |
+| Do-nothing judge (always "A better") | 53% (8 of 15) | 0.000 | the 15 held-out chats |
+| The person, re-ruling blind days later | 80% (12 of 15) | 0.526 | 15 chats drawn from all 60 |
 
 *The last row is not a competitor: it is the same person against their own earlier rulings, and it caps what any judge could score here.*
 
