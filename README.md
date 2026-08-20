@@ -2,7 +2,7 @@
 
 ## Can you trust an AI to grade another AI? This repo checks.
 
-- **What this is:** one person blind-graded 60 real service chats from a public research corpus in a labeling tool built for the job. Two AI judges were then scored against those rulings on 15 chats kept aside as the test: one calibrated (shown the person's example rulings first), one uncalibrated (shown none).
+- **What this is:** one person graded 60 real service chats blind, in a labeling tool built for the job. The chats come from a public research corpus. Two AI judges were then scored against those rulings on 15 chats kept aside as the test. One judge was calibrated: it saw the person's example rulings first. The other was uncalibrated: it saw none.
 - **The idea:** an AI judge is only a trustworthy stand-in for a human after you measure how well it matches that human.
 - **The unflattering result ships anyway:** a do-nothing judge that always gives the same answer matched the human as often as the calibrated one. Both land on 53%, and 15 test chats cannot tell the judges apart. That finding paid for the lessons: [What this taught](#what-this-taught).
 
@@ -43,7 +43,7 @@ This project taught me five things I will use in every eval after it:
 - **A small test cannot pick a winner.** With only 15 test chats, luck moves the scores, and one changed ruling flips the story ([The honest result](#the-honest-result)). Before trusting any judge score, ask how big the test was.
 - **Check the grader before the judge.** Days later, I re-graded 15 chats blind. I matched my own rulings on just 12 of them ([Experiment 1](#experiment-1-the-self-check-grading-twice)). A judge cannot agree with me more than I agree with myself. So measure the grader first.
 - **Planted flaws are not real failures.** I planted one flaw in each pair to create the answers fast. My blind rulings did not track them ([Limitations](#limitations)): what I actually flagged was clarity, missed instructions, and missing pieces ([the reason tags](metrics/results.md)). Labels should come from real failures, found by reading real outputs ([same FAQ](https://hamel.dev/blog/posts/evals-faq/)).
-- **Define the success criteria before you see the score.** I wrote them down before the judges ran, in a plan that cannot change afterward ([PREREGISTRATION.md](PREREGISTRATION.md), the pre-run plan). The criteria here: the calibrated judge passes only by matching my rulings on more of the 15 test chats than the uncalibrated judge; the same number is a fail. Criteria fixed in advance cannot be bent to fit a weak score.
+- **Define the success criteria before you see the score.** I wrote them down before the judges ran ([PREREGISTRATION.md](PREREGISTRATION.md), the pre-run plan). That plan cannot change afterward. The bar here: the calibrated judge passes only by matching my rulings on more of the 15 test chats than the uncalibrated judge. The same number is a fail. A bar fixed in advance cannot be bent to fit a weak score.
 
 <p align="right">(<a href="#contents">↑ back to top</a>)</p>
 
