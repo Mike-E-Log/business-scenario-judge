@@ -74,7 +74,7 @@ flowchart TD
 
 - **Hand-checking is costly.** One published estimate: about $8 for each AI answer an expert grades ([Eugene Yan's survey of LLM evaluators](https://eugeneyan.com/writing/llm-evaluators/), citing the Shepherd paper).
 - **So companies ask a second AI to do the grading.** That opens a new question: is the AI grader any good?
-- **The standard first step is to measure the grader against a human, and that measurement is this whole repo.** [OpenAI's guidance](https://developers.openai.com/api/docs/guides/evaluation-best-practices) says to "validate agreement against your human labels before optimizing for cost or latency". The MT-Bench study ([Zheng et al. 2023](https://arxiv.org/abs/2306.05685)) found strong AI judges reach over 80% agreement with human preferences, the level humans reach with each other. No cost saving is claimed here.
+- **The standard first step is to measure the grader against a human.** That measurement is this whole repo. [OpenAI's guidance](https://developers.openai.com/api/docs/guides/evaluation-best-practices) says to "validate agreement against your human labels before optimizing for cost or latency". The MT-Bench study ([Zheng et al. 2023](https://arxiv.org/abs/2306.05685)) found strong AI judges reach over 80% agreement with human preferences. That is the level humans reach with each other. No cost saving is claimed here.
 
 <p align="right">(<a href="#contents">↑ back to top</a>)</p>
 
@@ -84,8 +84,8 @@ flowchart TD
 
 A demonstration built for this measurement, not a system that ever served real customers.
 
-- **The chats are real public research data:** MultiWOZ 2.2 (MIT license, Copyright (c) 2019 Paweł Budzianowski), a "Wizard-of-Oz" corpus: people role-playing customer and service agent for research, not logs from a live business (sources and citations: [THIRD_PARTY.md](THIRD_PARTY.md)). Each chat is the opening back-and-forth of one of those conversations, cut off right where the customer asks for something.
-- **The pairwise comparison in action:** under each cut-off chat sit two candidate replies, side by side. The grader, human or AI, reads the chat and picks which reply serves the customer better: A better, B better, or tie.
+- **The chats are real public research data:** MultiWOZ 2.2 (MIT license, Copyright (c) 2019 Paweł Budzianowski). It is a "Wizard-of-Oz" corpus: people role-playing customer and service agent for research, not logs from a live business (sources and citations: [THIRD_PARTY.md](THIRD_PARTY.md)). Each chat is the opening back-and-forth of one of those conversations. It is cut off right where the customer asks for something.
+- **The side-by-side pick (a "pairwise" comparison):** under each cut-off chat sit two candidate replies. The grader, human or AI, reads the chat and picks which reply serves the customer better: A better, B better, or tie.
 - **Both candidate replies are AI-written, and the judges are AI too:**
   - Reply one: written by `claude-sonnet-5`, asked to answer well.
   - Reply two: written by `claude-haiku-4-5-20251001`, asked to answer plausibly while slipping in one realistic service flaw.
