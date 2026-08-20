@@ -105,14 +105,14 @@ One person is the entire gold standard here, so the repo measures that person to
 | Statistic | Value | Plain meaning |
 |---|---|---|
 | Raw match | 80% | 12 of the 15 second rulings matched the first |
-| 95% Wilson range | 55%–93% | the honest error margin: with only 15 chats, the true consistency could plausibly sit anywhere from 55% to 93%, so 80% is the middle of a wide range, not a precise number. It is reported so no one reads 80% as exact. (Wilson is the statistician whose formula fits small samples.) |
+| 95% Wilson range | 55%–93% | the honest error margin: with only 15 chats, the true consistency could plausibly sit anywhere from 55% to 93%. It is reported so no one reads 80% as exact ([plain words below](#the-wide-range-in-plain-words)). |
 | Chance-corrected agreement (Cohen's κ) | 0.526 | how much better the match is than lucky guessing: 0 means pure luck, 1 means perfect; 15 chats is too few to attach a firm strength label |
 
 - **The memory question.** After re-ruling each chat, the app asked: do you remember your first ruling? One answer per chat is stored in `data/retest.jsonl`. Every answer was no.
   - Keeping only the chats answered no or unsure changes nothing (the restriction is not selective here: every answer was no).
   - Being asked about memory can itself nudge later rulings; that side effect is disclosed rather than designed away.
   - Saying no cannot prove memory played no part, so 80% stays an upper bound on this one person's consistency.
-- **The sample was locked in advance.** The 15 re-ruled chats came from a fixed random draw saved in `data/retest_items.json` before the re-grading began, so they could not be hand-picked afterward. A match means the exact same verdict: A better, B better, or tie.
+- **The sample was locked in advance.** The 15 re-ruled chats came from a fixed random draw saved in `data/retest_items.json` before the re-grading began. They could not be hand-picked afterward. A match means the exact same verdict: A better, B better, or tie.
 
 ![Blind retest results screen: 80 percent agreement with yourself, 55 to 93 percent interval, kappa 0.526](docs/screenshots/eval-studio-retest-results.png)
 *The self-check as the app reported it: 12 of 15 matched, the wide range stated, the chance-corrected score beside it.*
